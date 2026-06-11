@@ -169,13 +169,13 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
       {/* HEADER & FILTER */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">ภาพรวมตัวชี้วัด (Executive Summary)</h1>
-          <p className="text-slate-500 mt-1">สรุปสถานการณ์ตัวชี้วัดคุณภาพทางคลินิก ปีงบประมาณ 2569</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">ภาพรวมตัวชี้วัด (Executive Summary)</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">สรุปสถานการณ์ตัวชี้วัดคุณภาพทางคลินิก ปีงบประมาณ 2569</p>
         </div>
         <div className="w-full sm:w-72">
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">เลือกแผนก (PCT)</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1.5">เลือกแผนก (PCT)</label>
           <Select value={selectedDeptId} onValueChange={(val) => val && setSelectedDeptId(val)}>
-            <SelectTrigger className="bg-white border-slate-200 shadow-sm focus:ring-blue-500">
+            <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm focus:ring-blue-500">
               <span data-slot="select-value" className="flex flex-1 text-left">
                 {selectedDeptId === 'all' ? 'ดูภาพรวมทุกแผนก' : initialData.find(d => d.id === selectedDeptId)?.name || 'ทุกแผนก'}
               </span>
@@ -198,10 +198,10 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
           const circumference = 2 * Math.PI * radius
           const strokeDashoffset = circumference - (percent / 100) * circumference
           return (
-            <Card key={dept.deptName} className="bg-white border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300">
+            <Card key={dept.deptName} className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300">
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <div className="h-10 flex items-center justify-center mb-4">
-                  <span className="text-sm font-bold text-slate-800 line-clamp-2" title={dept.deptName}>{dept.deptName}</span>
+                  <span className="text-sm font-bold text-slate-800 dark:text-slate-100 line-clamp-2" title={dept.deptName}>{dept.deptName}</span>
                 </div>
                 
                 <div className="relative flex items-center justify-center w-24 h-24 flex-shrink-0 mb-4">
@@ -217,8 +217,8 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                   <span className="absolute text-lg font-bold text-emerald-700">{Math.round(percent)}%</span>
                 </div>
 
-                <div className="flex flex-col bg-slate-50 w-full py-2 rounded-lg border border-slate-100">
-                  <span className="text-xs text-slate-500 mb-0.5">ผ่านเกณฑ์</span>
+                <div className="flex flex-col bg-slate-50 dark:bg-slate-800/50 w-full py-2 rounded-lg border border-slate-100 dark:border-slate-800">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 mb-0.5">ผ่านเกณฑ์</span>
                   <span className="text-sm font-bold text-emerald-600">{dept.passed} / {dept.total} ตัวชี้วัด</span>
                 </div>
               </CardContent>
@@ -232,15 +232,15 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
         
         {/* KPI LIST (Left Column) */}
         <div className="lg:col-span-1 space-y-4">
-          <Card className="shadow-sm border-slate-200">
-            <CardHeader className="bg-slate-50 border-b border-slate-100 py-4 flex flex-row items-center justify-between">
+          <Card className="shadow-sm border-slate-200 dark:border-slate-700">
+            <CardHeader className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 py-4 flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-base font-semibold text-slate-800">รายการตัวชี้วัด</CardTitle>
+                <CardTitle className="text-base font-semibold text-slate-800 dark:text-slate-100">รายการตัวชี้วัด</CardTitle>
                 <CardDescription>คลิกเพื่อดูรายละเอียด</CardDescription>
               </div>
               <button 
                 onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
-                className="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 px-2.5 py-1.5 rounded hover:bg-slate-50 transition-colors shadow-sm"
+                className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-2.5 py-1.5 rounded hover:bg-slate-50 dark:bg-slate-800/50 transition-colors shadow-sm"
                 title="เรียงตามเปอร์เซ็นต์ที่ผ่าน"
               >
                 <ArrowUpDown className="w-3.5 h-3.5" />
@@ -248,7 +248,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               </button>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="max-h-[600px] overflow-y-auto bg-white">
+              <div className="max-h-[600px] overflow-y-auto bg-white dark:bg-slate-900">
                 {departmentSummaries.map(({ deptName, inds, total, passed, percent }) => {
                   const isExpanded = expandedDepts[deptName] === true // Default to false
                   const radius = 6;
@@ -256,10 +256,10 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                   const strokeDashoffset = circumference - (percent / 100) * circumference;
 
                   return (
-                  <div key={deptName} className="border-b border-slate-100 last:border-b-0">
+                  <div key={deptName} className="border-b border-slate-100 dark:border-slate-800 last:border-b-0">
                     <div 
                       onClick={() => toggleDept(deptName)}
-                      className="bg-slate-50/80 px-4 py-3 sticky top-0 z-10 backdrop-blur-sm border-b border-slate-100 font-semibold text-sm text-indigo-900 shadow-sm flex items-center justify-between cursor-pointer hover:bg-indigo-50/80 transition-all duration-300"
+                      className="bg-slate-50 dark:bg-slate-800/50/80 px-4 py-3 sticky top-0 z-10 backdrop-blur-sm border-b border-slate-100 dark:border-slate-800 font-semibold text-sm text-indigo-900 shadow-sm flex items-center justify-between cursor-pointer hover:bg-indigo-50/80 transition-all duration-300"
                     >
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-4 bg-indigo-500 rounded-full"></div>
@@ -280,11 +280,11 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                             <span className="absolute text-[8px] font-bold text-emerald-700">{Math.round(percent)}%</span>
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-xs text-slate-500 font-medium leading-tight">ผ่านเกณฑ์</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-tight">ผ่านเกณฑ์</span>
                             <span className="text-xs font-semibold text-emerald-700 leading-tight">{passed} / {total} ตัว</span>
                           </div>
                         </div>
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-500 dark:text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
                       </div>
                     </div>
                     {isExpanded && (
@@ -293,16 +293,16 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                           <div 
                             key={ind.id}
                             onClick={() => setSelectedKpiId(ind.id)}
-                            className={`p-4 cursor-pointer transition-all duration-300 ease-in-out ${selectedKpiId === ind.id ? 'bg-blue-50/60 border-l-4 border-blue-600 shadow-inner' : 'border-l-4 border-transparent hover:bg-slate-50 hover:translate-x-1 hover:shadow-sm'}`}
+                            className={`p-4 cursor-pointer transition-all duration-300 ease-in-out ${selectedKpiId === ind.id ? 'bg-blue-50/60 border-l-4 border-blue-600 shadow-inner' : 'border-l-4 border-transparent hover:bg-slate-50 dark:bg-slate-800/50 hover:translate-x-1 hover:shadow-sm'}`}
                           >
                             <div className="flex justify-between items-start gap-2">
                               <div>
-                                <h4 className="text-sm font-semibold text-slate-900 line-clamp-2">{ind.name}</h4>
+                                <h4 className="text-sm font-semibold text-slate-900 dark:text-white line-clamp-2">{ind.name}</h4>
                                 <div className="mt-2 flex items-center gap-2 text-xs">
-                                  <span className="bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded font-medium shadow-sm">
+                                  <span className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded font-medium shadow-sm">
                                     เป้า: {ind.targetType} {ind.targetValue} {ind.unit && ind.unit !== 'n/a' ? ind.unit : ''}
                                   </span>
-                                  <span className="text-slate-500 font-medium">
+                                  <span className="text-slate-500 dark:text-slate-400 font-medium">
                                     ผล: {ind.ytdResult !== null ? ind.ytdResult.toFixed(2) : '-'} {ind.ytdResult !== null && ind.unit && ind.unit !== 'n/a' ? ind.unit : ''}
                                   </span>
                                 </div>
@@ -327,7 +327,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
         {/* KPI DETAILS (Right Column) */}
         <div className="lg:col-span-2">
           {selectedKpiDetails ? (
-            <Card className="shadow-sm border-slate-200 overflow-hidden">
+            <Card className="shadow-sm border-slate-200 dark:border-slate-700 overflow-hidden">
               <div className={`h-2 w-full ${
                 selectedKpiDetails.isPass === true ? 'bg-emerald-500' : 
                 selectedKpiDetails.isPass === false ? 'bg-rose-500' : 'bg-amber-400'
@@ -336,8 +336,8 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               <CardHeader className="pb-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <Badge variant="outline" className="mb-2 bg-slate-50 text-slate-600">{selectedKpiDetails.deptName}</Badge>
-                    <CardTitle className="text-xl font-bold leading-tight text-slate-900">{selectedKpiDetails.name}</CardTitle>
+                    <Badge variant="outline" className="mb-2 bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300">{selectedKpiDetails.deptName}</Badge>
+                    <CardTitle className="text-xl font-bold leading-tight text-slate-900 dark:text-white">{selectedKpiDetails.name}</CardTitle>
                   </div>
                   <Badge className={`px-3 py-1 text-sm font-medium ${
                     selectedKpiDetails.isPass === true ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100' : 
@@ -352,23 +352,23 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                  <div className="bg-slate-50 rounded-lg p-4 text-center border border-slate-100">
-                    <p className="text-sm text-slate-500 font-medium mb-1">เป้าหมาย</p>
-                    <p className="text-2xl font-bold text-slate-900">
-                      {selectedKpiDetails.targetType} {selectedKpiDetails.targetValue} <span className="text-sm font-normal text-slate-500">{selectedKpiDetails.unit}</span>
+                  <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 text-center border border-slate-100 dark:border-slate-800">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">เป้าหมาย</p>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                      {selectedKpiDetails.targetType} {selectedKpiDetails.targetValue} <span className="text-sm font-normal text-slate-500 dark:text-slate-400">{selectedKpiDetails.unit}</span>
                     </p>
                   </div>
-                  <div className="bg-slate-50 rounded-lg p-4 text-center border border-slate-100">
-                    <p className="text-sm text-slate-500 font-medium mb-1">ผลงานสะสม (YTD)</p>
+                  <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 text-center border border-slate-100 dark:border-slate-800">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">ผลงานสะสม (YTD)</p>
                     <p className={`text-2xl font-bold ${
                       selectedKpiDetails.isPass === true ? 'text-emerald-600' : 
-                      selectedKpiDetails.isPass === false ? 'text-rose-600' : 'text-slate-900'
+                      selectedKpiDetails.isPass === false ? 'text-rose-600' : 'text-slate-900 dark:text-white'
                     }`}>
-                      {selectedKpiDetails.ytdResult !== null ? selectedKpiDetails.ytdResult.toFixed(2) : '-'} <span className="text-sm font-normal text-slate-500">{selectedKpiDetails.unit}</span>
+                      {selectedKpiDetails.ytdResult !== null ? selectedKpiDetails.ytdResult.toFixed(2) : '-'} <span className="text-sm font-normal text-slate-500 dark:text-slate-400">{selectedKpiDetails.unit}</span>
                     </p>
                   </div>
-                  <div className="bg-slate-50 rounded-lg p-4 text-center border border-slate-100">
-                    <p className="text-sm text-slate-500 font-medium mb-1">ความก้าวหน้า</p>
+                  <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 text-center border border-slate-100 dark:border-slate-800">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">ความก้าวหน้า</p>
                     <p className="text-2xl font-bold text-blue-600">
                       {selectedKpiDetails.denSum > 0 ? (selectedKpiDetails.numSum + '/' + selectedKpiDetails.denSum) : '-'}
                     </p>
@@ -396,29 +396,29 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                   </ResponsiveContainer>
                 </div>
 
-                <div className="md:hidden text-xs text-slate-500 mb-2 flex items-center justify-end gap-1">
+                <div className="md:hidden text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center justify-end gap-1">
                   <ArrowUpDown className="w-3 h-3 rotate-90" />
                   <span>เลื่อนซ้าย-ขวาเพื่อดูข้อมูลเพิ่มเติม</span>
                 </div>
-                <div className="overflow-x-auto rounded-lg border border-slate-200 custom-scrollbar">
-                  <table className="w-full text-sm text-left text-slate-600">
-                    <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
+                <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700 custom-scrollbar">
+                  <table className="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                    <thead className="text-xs text-slate-700 dark:text-slate-200 uppercase bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
                       <tr>
                         <th className="px-4 py-3">ข้อมูล</th>
                         {monthNames.map(m => <th key={m} className="px-2 py-3 text-center">{m}</th>)}
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b border-slate-100">
-                        <td className="px-4 py-3 font-medium text-slate-900 bg-slate-50/50">ผลงาน (Numerator)</td>
+                      <tr className="border-b border-slate-100 dark:border-slate-800">
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50/50">ผลงาน (Numerator)</td>
                         {chartData.map((d: any, i: number) => <td key={i} className="px-2 py-3 text-center">{d.num || '-'}</td>)}
                       </tr>
-                      <tr className="border-b border-slate-100">
-                        <td className="px-4 py-3 font-medium text-slate-900 bg-slate-50/50">เป้าหมาย (Denominator)</td>
+                      <tr className="border-b border-slate-100 dark:border-slate-800">
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50/50">เป้าหมาย (Denominator)</td>
                         {chartData.map((d: any, i: number) => <td key={i} className="px-2 py-3 text-center">{d.den || '-'}</td>)}
                       </tr>
                       <tr>
-                        <td className="px-4 py-3 font-medium text-slate-900 bg-slate-50/50">ผลลัพธ์รายเดือน</td>
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50/50">ผลลัพธ์รายเดือน</td>
                         {chartData.map((d: any, i: number) => (
                           <td key={i} className="px-2 py-3 text-center font-semibold text-blue-600">
                             {d.ผลงานรายเดือน !== null ? d.ผลงานรายเดือน : '-'}
@@ -432,9 +432,9 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               </CardContent>
             </Card>
           ) : (
-            <Card className="shadow-sm border-slate-200 overflow-hidden animate-in fade-in duration-500">
-              <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4">
-                <CardTitle className="text-lg font-bold text-slate-800">
+            <Card className="shadow-sm border-slate-200 dark:border-slate-700 overflow-hidden animate-in fade-in duration-500">
+              <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50/50 pb-4">
+                <CardTitle className="text-lg font-bold text-slate-800 dark:text-slate-100">
                   สรุปผลรายเดือน: {selectedDeptFocus ? selectedDeptFocus : (selectedDeptId === 'all' ? 'ภาพรวมทุกแผนก' : initialData.find(d => d.id === selectedDeptId)?.name)}
                 </CardTitle>
                 <CardDescription>
@@ -446,7 +446,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-0 overflow-x-auto custom-scrollbar max-h-[800px]">
-                <div className="p-6 border-b border-slate-100 bg-white">
+                <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
                   <div className="h-[250px] w-full min-w-[600px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={overviewChartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
@@ -481,22 +481,22 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                       {deptName}
                     </div>
                     <table className="w-full text-xs text-left border-collapse min-w-[800px]">
-                      <thead className="bg-slate-50 text-slate-500 border-b border-slate-200">
+                      <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
                         <tr>
-                          <th className="p-3 font-medium min-w-[250px] max-w-[300px] sticky left-0 bg-slate-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">ตัวชี้วัด</th>
-                          <th className="p-3 font-medium text-center border-r border-slate-100">เป้า</th>
+                          <th className="p-3 font-medium min-w-[250px] max-w-[300px] sticky left-0 bg-slate-50 dark:bg-slate-800/50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">ตัวชี้วัด</th>
+                          <th className="p-3 font-medium text-center border-r border-slate-100 dark:border-slate-800">เป้า</th>
                           {monthNames.map(m => <th key={m} className="p-2 font-medium text-center">{m}</th>)}
-                          <th className="p-3 font-medium text-center border-l border-slate-200 bg-amber-50/50">YTD</th>
+                          <th className="p-3 font-medium text-center border-l border-slate-200 dark:border-slate-700 bg-amber-50/50">YTD</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
                         {(inds as any[]).map((ind: any) => (
-                          <tr key={ind.id} className="hover:bg-slate-50 transition-colors cursor-pointer group" onClick={() => setSelectedKpiId(ind.id)}>
-                            <td className="p-3 sticky left-0 bg-white group-hover:bg-slate-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">
-                              <p className="font-medium text-slate-800 line-clamp-2" title={ind.name}>{ind.name}</p>
+                          <tr key={ind.id} className="hover:bg-slate-50 dark:bg-slate-800/50 transition-colors cursor-pointer group" onClick={() => setSelectedKpiId(ind.id)}>
+                            <td className="p-3 sticky left-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:bg-slate-800/50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">
+                              <p className="font-medium text-slate-800 dark:text-slate-100 line-clamp-2" title={ind.name}>{ind.name}</p>
                             </td>
-                            <td className="p-3 text-center whitespace-nowrap border-r border-slate-100">
-                              <Badge variant="outline" className="text-[10px] bg-slate-50 text-slate-600 font-mono shadow-sm">
+                            <td className="p-3 text-center whitespace-nowrap border-r border-slate-100 dark:border-slate-800">
+                              <Badge variant="outline" className="text-[10px] bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-mono shadow-sm">
                                 {ind.targetType} {ind.targetValue}
                               </Badge>
                             </td>
@@ -514,13 +514,13 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                                     {m.result !== null ? Number(m.result.toFixed(2)) : '-'}
                                   </div>
                                 ) : (
-                                  <div className="w-full min-w-[36px] py-1 px-1 rounded-md text-[11px] font-medium text-center bg-slate-50 text-slate-300 border border-slate-100" title="ไม่มีข้อมูล">
+                                  <div className="w-full min-w-[36px] py-1 px-1 rounded-md text-[11px] font-medium text-center bg-slate-50 dark:bg-slate-800/50 text-slate-300 border border-slate-100 dark:border-slate-800" title="ไม่มีข้อมูล">
                                     -
                                   </div>
                                 )}
                               </td>
                             ))}
-                            <td className="p-3 text-center border-l border-slate-200 bg-amber-50/20">
+                            <td className="p-3 text-center border-l border-slate-200 dark:border-slate-700 bg-amber-50/20">
                               {ind.denSum > 0 ? (
                                 <Badge className={`px-2 py-0.5 text-[10px] font-semibold ${ind.isPass === true ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
                                   {ind.ytdResult !== null ? ind.ytdResult.toFixed(2) : '-'}

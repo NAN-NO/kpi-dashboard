@@ -1,15 +1,22 @@
 'use client'
 
 import Link from 'next/link'
-import { Activity, LayoutDashboard, FileEdit, Settings, LogOut, User, Menu, X } from 'lucide-react'
+import { Activity, LayoutDashboard, FileEdit, Settings, LogOut, User, Menu, X, Sun, Moon } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useTheme } from 'next-themes'
 
 export function Navbar() {
   const { data: session } = useSession()
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const navLinks = [
     { href: '/', label: 'ภาพรวม (Dashboard)', icon: LayoutDashboard, roles: ['viewer', 'editor', 'admin'] },
@@ -22,14 +29,14 @@ export function Navbar() {
   })
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur shadow-sm">
       <div className="w-full flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-blue-600 p-1.5 rounded-lg shadow-sm">
               <Activity className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-lg tracking-tight text-slate-800 hidden sm:inline-block">
+            <span className="font-bold text-lg tracking-tight text-foreground hidden sm:inline-block">
               ระบบฐานข้อมูลตัวชี้วัด (CG)
             </span>
           </Link>
@@ -58,7 +65,17 @@ export function Navbar() {
         </div>
 
         {/* User Menu & Mobile Toggle */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+          )}
+
           {session ? (
             <div className="hidden sm:flex items-center gap-4">
               <div className="flex flex-col items-end">
@@ -98,7 +115,7 @@ export function Navbar() {
 
       {/* Mobile Nav */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t bg-white">
+        <div className="md:hidden border-t bg-background">
           <nav className="flex flex-col px-4 py-3 space-y-1">
             {filteredLinks.map((link) => {
               const isActive = pathname === link.href

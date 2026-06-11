@@ -151,10 +151,10 @@ export function EntryForm({ departments }: { departments: any }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center gap-4 justify-between sticky top-0 z-50">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center gap-4 justify-between sticky top-0 z-50">
         <div className="flex items-center gap-4 w-full sm:w-auto">
           <div className="flex flex-col gap-1 w-full sm:w-auto">
-            <Label className="text-xs text-slate-500">เลือกแผนก / PCT</Label>
+            <Label className="text-xs text-slate-500 dark:text-slate-400">เลือกแผนก / PCT</Label>
             <Select value={selectedDept} onValueChange={setSelectedDept}>
               <SelectTrigger className="w-full sm:w-[300px] h-9 font-medium">
                 <span data-slot="select-value" className="flex flex-1 text-left">
@@ -183,19 +183,19 @@ export function EntryForm({ departments }: { departments: any }) {
       </div>
 
       {showAddInd && (
-        <div className="p-6 bg-indigo-50/50 border border-slate-200 rounded-xl shadow-sm relative -mt-2 mb-6">
+        <div className="p-6 bg-indigo-50/50 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm relative -mt-2 mb-6">
           <h3 className="text-sm font-bold text-indigo-900 mb-4 flex items-center gap-2">
             <PlusCircle className="h-4 w-4" /> สร้างตัวชี้วัดใหม่ในแผนกนี้
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
             <div className="lg:col-span-2">
               <Label>ชื่อตัวชี้วัด</Label>
-              <Input value={indName} onChange={e => setIndName(e.target.value)} placeholder="เช่น อัตราการเกิดทารกน้ำหนักน้อย" className="bg-white mt-1.5" />
+              <Input value={indName} onChange={e => setIndName(e.target.value)} placeholder="เช่น อัตราการเกิดทารกน้ำหนักน้อย" className="bg-white dark:bg-slate-900 mt-1.5" />
             </div>
             <div>
               <Label>เงื่อนไข</Label>
               <Select value={targetType} onValueChange={(val) => val && setTargetType(val)}>
-                <SelectTrigger className="bg-white mt-1.5">
+                <SelectTrigger className="bg-white dark:bg-slate-900 mt-1.5">
                   <span data-slot="select-value" className="flex flex-1 text-left">
                     {targetType === '<' ? 'น้อยกว่า (<)' : targetType === '<=' ? 'น้อยกว่าหรือเท่ากับ (<=)' : targetType === '>' ? 'มากกว่า (>)' : targetType === '>=' ? 'มากกว่าหรือเท่ากับ (>=)' : targetType === '=' ? 'เท่ากับ (=)' : ''}
                   </span>
@@ -211,12 +211,12 @@ export function EntryForm({ departments }: { departments: any }) {
             </div>
             <div>
               <Label>ตัวเลขเป้าหมาย</Label>
-              <Input type="number" value={targetVal} onChange={e => setTargetVal(e.target.value)} placeholder="เช่น 10" className="bg-white mt-1.5" />
+              <Input type="number" value={targetVal} onChange={e => setTargetVal(e.target.value)} placeholder="เช่น 10" className="bg-white dark:bg-slate-900 mt-1.5" />
             </div>
             <div>
               <Label>หน่วย</Label>
               <Select value={unit} onValueChange={(val) => val && setUnit(val)}>
-                <SelectTrigger className="bg-white mt-1.5">
+                <SelectTrigger className="bg-white dark:bg-slate-900 mt-1.5">
                   <span data-slot="select-value" className="flex flex-1 text-left">
                     {unit === '%' ? 'ร้อยละ (%)' : unit}
                   </span>
@@ -237,34 +237,34 @@ export function EntryForm({ departments }: { departments: any }) {
         </div>
       )}
 
-      <Card className="shadow-sm border-slate-300 overflow-hidden">
-        <div className="md:hidden text-xs text-slate-500 bg-slate-50 p-2 flex items-center justify-center gap-1 border-b border-slate-200">
+      <Card className="shadow-sm border-slate-300 dark:border-slate-600 overflow-hidden">
+        <div className="md:hidden text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 p-2 flex items-center justify-center gap-1 border-b border-slate-200 dark:border-slate-700">
           <ArrowUpDown className="w-3 h-3 rotate-90" />
           <span>เลื่อนซ้าย-ขวาที่ตารางเพื่อดูและกรอกข้อมูลเดือนอื่น</span>
         </div>
         <div className="overflow-x-auto max-h-[75vh] relative custom-scrollbar">
           <table className="w-full text-sm border-collapse min-w-[1200px]">
-            <thead className="sticky top-0 z-40 bg-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.1)]">
-              <tr className="text-slate-700">
-                <th className="border-b border-slate-300 p-3 font-semibold text-left lg:sticky lg:left-0 z-50 bg-slate-100 min-w-[200px] sm:min-w-[300px] max-w-[400px] lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+            <thead className="sticky top-0 z-40 bg-slate-100 dark:bg-slate-800 shadow-[0_1px_3px_rgba(0,0,0,0.1)]">
+              <tr className="text-slate-700 dark:text-slate-200">
+                <th className="border-b border-slate-300 dark:border-slate-600 p-3 font-semibold text-left lg:sticky lg:left-0 z-50 bg-slate-100 dark:bg-slate-800 min-w-[200px] sm:min-w-[300px] max-w-[400px] lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                   รายชื่อตัวชี้วัด
                 </th>
-                <th className="border-b border-slate-300 border-l p-3 font-semibold text-center lg:sticky lg:left-[300px] z-50 bg-slate-100 min-w-[100px] lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                <th className="border-b border-slate-300 dark:border-slate-600 border-l p-3 font-semibold text-center lg:sticky lg:left-[300px] z-50 bg-slate-100 dark:bg-slate-800 min-w-[100px] lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                   ประเภท
                 </th>
                 {monthNames.map((m, i) => (
-                  <th key={i} className="border-b border-l border-slate-300 p-3 font-semibold text-center min-w-[70px]">
+                  <th key={i} className="border-b border-l border-slate-300 dark:border-slate-600 p-3 font-semibold text-center min-w-[70px]">
                     {m}
                   </th>
                 ))}
-                <th className="border-b border-l border-slate-300 p-3 font-bold text-center bg-amber-50 text-amber-900 min-w-[80px] lg:sticky lg:right-0 z-40 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                <th className="border-b border-l border-slate-300 dark:border-slate-600 p-3 font-bold text-center bg-amber-50 text-amber-900 min-w-[80px] lg:sticky lg:right-0 z-40 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                   รวม (YTD)
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white">
+            <tbody className="bg-white dark:bg-slate-900">
               {dept.indicators.map((ind: any, indIdx: number) => {
-                const rowBg = indIdx % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'
+                const rowBg = indIdx % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-slate-50 dark:bg-slate-800/50/30'
                 
                 // Calculate YTD dynamically based on current grid state
                 let sumNum = 0
@@ -297,15 +297,15 @@ export function EntryForm({ departments }: { departments: any }) {
                 return (
                   <React.Fragment key={ind.id}>
                     {/* Denominator Row */}
-                    <tr className={`border-b border-slate-200 ${rowBg} hover:bg-slate-50 transition-colors`}>
-                      <td rowSpan={3} className={`border-r border-slate-200 p-4 lg:sticky lg:left-0 z-30 bg-white lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] align-top group`}>
+                    <tr className={`border-b border-slate-200 dark:border-slate-700 ${rowBg} hover:bg-slate-50 dark:bg-slate-800/50 transition-colors`}>
+                      <td rowSpan={3} className={`border-r border-slate-200 dark:border-slate-700 p-4 lg:sticky lg:left-0 z-30 bg-white dark:bg-slate-900 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] align-top group`}>
                         {editingIndId === ind.id ? (
                           <div className="flex flex-col gap-2">
                             <Input value={editIndName} onChange={(e) => setEditIndName(e.target.value)} className="h-8 text-sm" />
                             <div className="flex items-center gap-2">
-                              <span className="text-xs text-slate-500 whitespace-nowrap">เป้าหมาย:</span>
+                              <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">เป้าหมาย:</span>
                               <Select value={editIndTargetType} onValueChange={(val) => setEditIndTargetType(val || '')}>
-                                <SelectTrigger className="h-8 w-20 text-sm bg-white border-slate-300">
+                                <SelectTrigger className="h-8 w-20 text-sm bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600">
                                   <span data-slot="select-value" className="flex flex-1 text-left">{editIndTargetType}</span>
                                 </SelectTrigger>
                                 <SelectContent>
@@ -318,7 +318,7 @@ export function EntryForm({ departments }: { departments: any }) {
                               </Select>
                               <Input type="number" value={editIndTarget} onChange={(e) => setEditIndTarget(e.target.value)} className="h-8 w-20 text-sm" />
                               <Select value={editIndUnit} onValueChange={(val) => setEditIndUnit(val || '')}>
-                                <SelectTrigger className="h-8 w-[140px] text-sm bg-white border-slate-300">
+                                <SelectTrigger className="h-8 w-[140px] text-sm bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600">
                                   <span data-slot="select-value" className="flex flex-1 text-left">{editIndUnit === '%' ? 'ร้อยละ (%)' : editIndUnit}</span>
                                 </SelectTrigger>
                                 <SelectContent>
@@ -333,14 +333,14 @@ export function EntryForm({ departments }: { departments: any }) {
                               <Button size="sm" onClick={() => saveEditInd(ind.id)} className="h-7 px-2 bg-emerald-600 hover:bg-emerald-700 text-xs">
                                 <Check className="h-3 w-3 mr-1" /> บันทึก
                               </Button>
-                              <Button size="sm" variant="ghost" onClick={() => setEditingIndId(null)} className="h-7 px-2 text-slate-500">
+                              <Button size="sm" variant="ghost" onClick={() => setEditingIndId(null)} className="h-7 px-2 text-slate-500 dark:text-slate-400">
                                 <X className="h-3 w-3" />
                               </Button>
                             </div>
                           </div>
                         ) : (
                           <div className="relative pr-6">
-                            <div className="font-medium text-slate-800 mb-2 leading-relaxed">
+                            <div className="font-medium text-slate-800 dark:text-slate-100 mb-2 leading-relaxed">
                               {ind.name}
                             </div>
                             <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 font-semibold px-2 py-0.5 text-xs">
@@ -367,52 +367,52 @@ export function EntryForm({ departments }: { departments: any }) {
                           </div>
                         )}
                       </td>
-                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 lg:sticky lg:left-[300px] z-30 bg-slate-50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
+                      <td className={`border-r border-slate-200 dark:border-slate-700 p-2 text-center text-xs font-medium text-slate-600 dark:text-slate-300 lg:sticky lg:left-[300px] z-30 bg-slate-50 dark:bg-slate-800/50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
                         เป้าหมาย<br/><span className="text-[9px] text-slate-400">(Denominator)</span>
                       </td>
                       {ind.monthlyData.map((d: any) => {
                         const gridData = dataGrid[d.id] || d
                         return (
-                          <td key={`den-${d.id}`} className="border-r border-slate-200 p-1">
+                          <td key={`den-${d.id}`} className="border-r border-slate-200 dark:border-slate-700 p-1">
                             <Input 
                               type="number" 
                               value={gridData.denominator === null ? '' : gridData.denominator} 
                               onChange={e => handleDenChange(d.id, e.target.value)}
-                              className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200"
+                              className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
                             />
                           </td>
                         )
                       })}
-                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                         {sumDen > 0 ? sumDen.toLocaleString() : '-'}
                       </td>
                     </tr>
 
                     {/* Numerator Row */}
-                    <tr className={`border-b border-slate-200 ${rowBg} hover:bg-slate-50 transition-colors`}>
-                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 lg:sticky lg:left-[300px] z-30 bg-slate-50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
+                    <tr className={`border-b border-slate-200 dark:border-slate-700 ${rowBg} hover:bg-slate-50 dark:bg-slate-800/50 transition-colors`}>
+                      <td className={`border-r border-slate-200 dark:border-slate-700 p-2 text-center text-xs font-medium text-slate-600 dark:text-slate-300 lg:sticky lg:left-[300px] z-30 bg-slate-50 dark:bg-slate-800/50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
                         ผลงาน<br/><span className="text-[9px] text-slate-400">(Numerator)</span>
                       </td>
                       {ind.monthlyData.map((d: any) => {
                         const gridData = dataGrid[d.id] || d
                         return (
-                          <td key={`num-${d.id}`} className="border-r border-slate-200 p-1">
+                          <td key={`num-${d.id}`} className="border-r border-slate-200 dark:border-slate-700 p-1">
                             <Input 
                               type="number" 
                               value={gridData.numerator === 0 && gridData.denominator === null ? '' : gridData.numerator} 
                               onChange={e => handleNumChange(d.id, e.target.value)}
-                              className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200"
+                              className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
                             />
                           </td>
                         )
                       })}
-                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                         {sumDen > 0 ? sumNum.toLocaleString() : '-'}
                       </td>
                     </tr>
 
-                    <tr className={`border-b-2 border-slate-300 ${rowBg}`}>
-                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 lg:sticky lg:left-[300px] z-30 bg-slate-50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
+                    <tr className={`border-b-2 border-slate-300 dark:border-slate-600 ${rowBg}`}>
+                      <td className={`border-r border-slate-200 dark:border-slate-700 p-2 text-center text-xs font-medium text-slate-600 dark:text-slate-300 lg:sticky lg:left-[300px] z-30 bg-slate-50 dark:bg-slate-800/50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
                         ผลลัพธ์<br/><span className="text-[9px] text-slate-400">({ind.unit})</span>
                       </td>
                       {ind.monthlyData.map((d: any) => {
@@ -439,12 +439,12 @@ export function EntryForm({ departments }: { departments: any }) {
                         }
 
                         return (
-                          <td key={`res-${d.id}`} className={`border-r border-slate-200 p-2 text-center text-xs font-medium ${cellPass === true ? 'text-emerald-600 bg-emerald-50/50' : cellPass === false ? 'text-rose-600 bg-rose-50/50' : 'text-slate-400'}`}>
+                          <td key={`res-${d.id}`} className={`border-r border-slate-200 dark:border-slate-700 p-2 text-center text-xs font-medium ${cellPass === true ? 'text-emerald-600 bg-emerald-50/50' : cellPass === false ? 'text-rose-600 bg-rose-50/50' : 'text-slate-400'}`}>
                             {cellResult}
                           </td>
                         )
                       })}
-                      <td className={`p-2 text-center font-bold border-l border-slate-200 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)] ${isPass ? 'text-emerald-700 bg-emerald-100' : sumDen > 0 ? 'text-rose-700 bg-rose-100' : 'text-slate-500 bg-amber-50'}`}>
+                      <td className={`p-2 text-center font-bold border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)] ${isPass ? 'text-emerald-700 bg-emerald-100' : sumDen > 0 ? 'text-rose-700 bg-rose-100' : 'text-slate-500 dark:text-slate-400 bg-amber-50'}`}>
                         {ytdResult}
                       </td>
                     </tr>
