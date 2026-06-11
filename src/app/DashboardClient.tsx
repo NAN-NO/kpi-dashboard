@@ -482,7 +482,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {inds.map((ind: any) => (
+                        {(inds as any[]).map((ind: any) => (
                           <tr key={ind.id} className="hover:bg-slate-50 transition-colors cursor-pointer group" onClick={() => setSelectedKpiId(ind.id)}>
                             <td className="p-3 sticky left-0 bg-white group-hover:bg-slate-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">
                               <p className="font-medium text-slate-800 line-clamp-2" title={ind.name}>{ind.name}</p>
