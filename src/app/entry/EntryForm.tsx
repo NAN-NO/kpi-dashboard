@@ -384,7 +384,7 @@ export function EntryForm({ departments }: { departments: any }) {
                           <td key={`den-${d.id}`} className="border-r border-slate-200 dark:border-slate-700 p-1">
                             <Input 
                               type="number" 
-                              value={gridData.denominator === null ? '' : gridData.denominator} 
+                              value={gridData.denominator === null || Number(gridData.denominator) === 0 ? '' : gridData.denominator} 
                               onChange={e => handleDenChange(d.id, e.target.value)}
                               className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
                             />
@@ -407,7 +407,7 @@ export function EntryForm({ departments }: { departments: any }) {
                           <td key={`num-${d.id}`} className="border-r border-slate-200 dark:border-slate-700 p-1">
                             <Input 
                               type="number" 
-                              value={gridData.numerator === 0 ? '' : gridData.numerator}
+                              value={Number(gridData.numerator) === 0 ? '' : gridData.numerator}
                               onChange={e => handleNumChange(d.id, e.target.value)}
                               className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
                             />
