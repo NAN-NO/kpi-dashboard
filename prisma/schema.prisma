@@ -1,0 +1,59 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id         String      @id @default(uuid())
+  name       String      @unique
+  indicators Indicator[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  name      String
+  role      String   @default("viewer") // viewer, editor, admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Indicator {
+  id           String        @id @default(uuid())
+  name         String
+  targetValue  Float
+  targetType   String        // e.g., '>', '<', '=', '>=', '<='
+  unit         String        // e.g., '%', 'ต่อ 1,000 LB'
+  departmentId String
+  department   Department    @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  monthlyData  MonthlyData[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@unique([name, departmentId])
+}
+
+model MonthlyData {
+  id          String    @id @default(uuid())
+  indicatorId String
+  indicator   Indicator @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
+  year        Int       // e.g., 2569
+  month       Int       // 1 = ต.ค., 2 = พ.ย., ... 12 = ก.ย.
+  numerator   Float     // ผลงาน
+  denominator Float?    // เป้าหมาย
+  result      Float?    // ร้อยละหรืออัตราที่คำนวณได้
+  isPass      Boolean?  // ผ่านเกณฑ์หรือไม่
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([indicatorId, year, month])
+}
