@@ -300,7 +300,7 @@ export function EntryForm({ departments }: { departments: any }) {
                             <Input value={editIndName} onChange={(e) => setEditIndName(e.target.value)} className="h-8 text-sm" />
                             <div className="flex items-center gap-2">
                               <span className="text-xs text-slate-500 whitespace-nowrap">เป้าหมาย:</span>
-                              <Select value={editIndTargetType} onValueChange={setEditIndTargetType}>
+                              <Select value={editIndTargetType} onValueChange={(val) => setEditIndTargetType(val || '')}>
                                 <SelectTrigger className="h-8 w-20 text-sm bg-white border-slate-300">
                                   <span data-slot="select-value" className="flex flex-1 text-left">{editIndTargetType}</span>
                                 </SelectTrigger>
@@ -313,7 +313,7 @@ export function EntryForm({ departments }: { departments: any }) {
                                 </SelectContent>
                               </Select>
                               <Input type="number" value={editIndTarget} onChange={(e) => setEditIndTarget(e.target.value)} className="h-8 w-20 text-sm" />
-                              <Select value={editIndUnit} onValueChange={setEditIndUnit}>
+                              <Select value={editIndUnit} onValueChange={(val) => setEditIndUnit(val || '')}>
                                 <SelectTrigger className="h-8 w-[140px] text-sm bg-white border-slate-300">
                                   <span data-slot="select-value" className="flex flex-1 text-left">{editIndUnit === '%' ? 'ร้อยละ (%)' : editIndUnit}</span>
                                 </SelectTrigger>
