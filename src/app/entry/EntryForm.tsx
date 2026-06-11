@@ -44,7 +44,9 @@ export function EntryForm({ departments }: { departments: any }) {
       await updateIndicator(id, editIndName, Number(editIndTarget), editIndTargetType, editIndUnit)
       toast.success('แก้ไขตัวชี้วัดเรียบร้อยแล้ว', { id: toastId })
       setEditingIndId(null)
-      router.refresh()
+      setTimeout(() => {
+        window.location.reload()
+      }, 800)
     } catch (e) {
       toast.error('เกิดข้อผิดพลาด', { id: toastId })
     }
@@ -56,7 +58,9 @@ export function EntryForm({ departments }: { departments: any }) {
       try {
         await deleteIndicator(id)
         toast.success('ลบตัวชี้วัดเรียบร้อยแล้ว', { id: toastId })
-        router.refresh()
+        setTimeout(() => {
+        window.location.reload()
+      }, 800)
       } catch (e) {
         toast.error('เกิดข้อผิดพลาดในการลบตัวชี้วัด', { id: toastId })
       }
@@ -73,7 +77,9 @@ export function EntryForm({ departments }: { departments: any }) {
       setTargetVal('')
       setShowAddInd(false)
       toast.success('เพิ่มตัวชี้วัดเรียบร้อยแล้ว', { id: toastId })
-      router.refresh()
+      setTimeout(() => {
+        window.location.reload()
+      }, 800)
     } catch (e) {
       toast.error('เกิดข้อผิดพลาดในการเพิ่มตัวชี้วัด', { id: toastId })
     }
@@ -140,7 +146,9 @@ export function EntryForm({ departments }: { departments: any }) {
 
       await updateIndicatorData(updates)
       toast.success(`บันทึกข้อมูลเรียบร้อยแล้ว (${updates.length} รายการ)`, { id: toastId, duration: 4000 })
-      router.refresh()
+      setTimeout(() => {
+        window.location.reload()
+      }, 800)
     } catch (e) {
       toast.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล", { id: toastId })
     }
