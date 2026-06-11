@@ -24,11 +24,11 @@ export default function RootLayout({
   return (
     <html lang="th" suppressHydrationWarning>
       <body
-        className={`${prompt.variable} font-sans antialiased bg-background text-foreground min-h-screen flex flex-col`}
+        className={`${prompt.variable} font-sans antialiased bg-background text-foreground min-h-screen flex flex-col overflow-x-hidden w-full`}
       >
         <Providers>
           <Navbar />
-          <main className="flex-1">
+          <main className="flex-1 w-full min-w-0">
             {children}
           </main>
           <Toaster position="top-right" />

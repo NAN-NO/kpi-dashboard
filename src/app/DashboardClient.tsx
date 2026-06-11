@@ -231,7 +231,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
       <div className="grid lg:grid-cols-3 gap-6 items-start">
         
         {/* KPI LIST (Left Column) */}
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1 space-y-4 min-w-0">
           <Card className="shadow-sm border-slate-200 dark:border-slate-700">
             <CardHeader className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 py-4 flex flex-row items-center justify-between">
               <div>
@@ -325,7 +325,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
         </div>
 
         {/* KPI DETAILS (Right Column) */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 min-w-0">
           {selectedKpiDetails ? (
             <Card className="shadow-sm border-slate-200 dark:border-slate-700 overflow-hidden">
               <div className={`h-2 w-full ${
