@@ -1,11 +1,18 @@
 import { prisma } from "@/lib/prisma"
 import { SettingsClient } from "./SettingsClient"
 
+export const dynamic = 'force-dynamic'
+
 export default async function SettingsPage() {
   const departments = await prisma.department.findMany({
     include: {
       indicators: {
-        include: { monthlyData: true },
+        include: { 
+          monthlyData: {
+            where: { year: 2569 },
+            orderBy: { month: 'asc' }
+          } 
+        },
         orderBy: { name: 'asc' }
       }
     },
