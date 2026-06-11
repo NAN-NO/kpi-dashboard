@@ -451,10 +451,10 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                         />
                         <Legend wrapperStyle={{ paddingTop: '10px' }} />
                         <Bar dataKey="ผ่านเกณฑ์" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={40}>
-                          <LabelList dataKey="ผ่านเกณฑ์" position="top" formatter={(val: number) => val > 0 ? val : ''} fill="#10b981" fontSize={11} fontWeight={600} />
+                          <LabelList dataKey="ผ่านเกณฑ์" position="top" formatter={(val: any) => val > 0 ? val : ''} fill="#10b981" fontSize={11} fontWeight={600} />
                         </Bar>
                         <Bar dataKey="ไม่ผ่านเกณฑ์" fill="#f43f5e" radius={[4, 4, 0, 0]} maxBarSize={40}>
-                          <LabelList dataKey="ไม่ผ่านเกณฑ์" position="top" formatter={(val: number) => val > 0 ? val : ''} fill="#f43f5e" fontSize={11} fontWeight={600} />
+                          <LabelList dataKey="ไม่ผ่านเกณฑ์" position="top" formatter={(val: any) => val > 0 ? val : ''} fill="#f43f5e" fontSize={11} fontWeight={600} />
                         </Bar>
                       </BarChart>
                     </ResponsiveContainer>
