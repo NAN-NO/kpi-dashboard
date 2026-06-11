@@ -191,7 +191,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
       </div>
 
       {/* DEPARTMENT SUMMARY CARDS */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8">
         {departmentSummaries.map(dept => {
           const percent = dept.percent
           const radius = 24
@@ -351,7 +351,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               </CardHeader>
               
               <CardContent>
-                <div className="grid grid-cols-3 gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                   <div className="bg-slate-50 rounded-lg p-4 text-center border border-slate-100">
                     <p className="text-sm text-slate-500 font-medium mb-1">เป้าหมาย</p>
                     <p className="text-2xl font-bold text-slate-900">
@@ -396,7 +396,11 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                   </ResponsiveContainer>
                 </div>
 
-                <div className="overflow-x-auto rounded-lg border border-slate-200">
+                <div className="md:hidden text-xs text-slate-500 mb-2 flex items-center justify-end gap-1">
+                  <ArrowUpDown className="w-3 h-3 rotate-90" />
+                  <span>เลื่อนซ้าย-ขวาเพื่อดูข้อมูลเพิ่มเติม</span>
+                </div>
+                <div className="overflow-x-auto rounded-lg border border-slate-200 custom-scrollbar">
                   <table className="w-full text-sm text-left text-slate-600">
                     <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
                       <tr>
@@ -435,6 +439,10 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                 </CardTitle>
                 <CardDescription>
                   กราฟแสดงจำนวนตัวชี้วัดที่ผ่านเกณฑ์และไม่ผ่านเกณฑ์ในแต่ละเดือน และตารางรายละเอียด (คลิกที่ตัวชี้วัดเพื่อดูข้อมูล)
+                  <span className="block mt-2 md:hidden text-indigo-600 font-medium text-xs flex items-center gap-1">
+                    <ArrowUpDown className="w-3 h-3 rotate-90" />
+                    เลื่อนซ้าย-ขวาที่ตารางเพื่อดูข้อมูลทั้งหมด
+                  </span>
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-0 overflow-x-auto custom-scrollbar max-h-[800px]">

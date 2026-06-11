@@ -156,7 +156,7 @@ export function EntryForm({ departments }: { departments: any }) {
           <div className="flex flex-col gap-1 w-full sm:w-auto">
             <Label className="text-xs text-slate-500">เลือกแผนก / PCT</Label>
             <Select value={selectedDept} onValueChange={setSelectedDept}>
-              <SelectTrigger className="w-[300px] h-9 font-medium">
+              <SelectTrigger className="w-full sm:w-[300px] h-9 font-medium">
                 <span data-slot="select-value" className="flex flex-1 text-left">
                   {dept?.name || 'เลือกแผนก'}
                 </span>
@@ -238,14 +238,18 @@ export function EntryForm({ departments }: { departments: any }) {
       )}
 
       <Card className="shadow-sm border-slate-300 overflow-hidden">
+        <div className="md:hidden text-xs text-slate-500 bg-slate-50 p-2 flex items-center justify-center gap-1 border-b border-slate-200">
+          <ArrowUpDown className="w-3 h-3 rotate-90" />
+          <span>เลื่อนซ้าย-ขวาที่ตารางเพื่อดูและกรอกข้อมูลเดือนอื่น</span>
+        </div>
         <div className="overflow-x-auto max-h-[75vh] relative custom-scrollbar">
           <table className="w-full text-sm border-collapse min-w-[1200px]">
             <thead className="sticky top-0 z-40 bg-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.1)]">
               <tr className="text-slate-700">
-                <th className="border-b border-slate-300 p-3 font-semibold text-left sticky left-0 z-50 bg-slate-100 min-w-[300px] max-w-[400px] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                <th className="border-b border-slate-300 p-3 font-semibold text-left lg:sticky lg:left-0 z-50 bg-slate-100 min-w-[200px] sm:min-w-[300px] max-w-[400px] lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                   รายชื่อตัวชี้วัด
                 </th>
-                <th className="border-b border-slate-300 border-l p-3 font-semibold text-center sticky left-[300px] z-50 bg-slate-100 min-w-[100px] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                <th className="border-b border-slate-300 border-l p-3 font-semibold text-center lg:sticky lg:left-[300px] z-50 bg-slate-100 min-w-[100px] lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                   ประเภท
                 </th>
                 {monthNames.map((m, i) => (
@@ -253,7 +257,7 @@ export function EntryForm({ departments }: { departments: any }) {
                     {m}
                   </th>
                 ))}
-                <th className="border-b border-l border-slate-300 p-3 font-bold text-center bg-amber-50 text-amber-900 min-w-[80px] sticky right-0 z-40 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                <th className="border-b border-l border-slate-300 p-3 font-bold text-center bg-amber-50 text-amber-900 min-w-[80px] lg:sticky lg:right-0 z-40 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                   รวม (YTD)
                 </th>
               </tr>
@@ -294,7 +298,7 @@ export function EntryForm({ departments }: { departments: any }) {
                   <React.Fragment key={ind.id}>
                     {/* Denominator Row */}
                     <tr className={`border-b border-slate-200 ${rowBg} hover:bg-slate-50 transition-colors`}>
-                      <td rowSpan={3} className={`border-r border-slate-200 p-4 sticky left-0 z-30 bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] align-top group`}>
+                      <td rowSpan={3} className={`border-r border-slate-200 p-4 lg:sticky lg:left-0 z-30 bg-white lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] align-top group`}>
                         {editingIndId === ind.id ? (
                           <div className="flex flex-col gap-2">
                             <Input value={editIndName} onChange={(e) => setEditIndName(e.target.value)} className="h-8 text-sm" />
@@ -363,7 +367,7 @@ export function EntryForm({ departments }: { departments: any }) {
                           </div>
                         )}
                       </td>
-                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 sticky left-[300px] z-30 bg-slate-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
+                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 lg:sticky lg:left-[300px] z-30 bg-slate-50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
                         เป้าหมาย<br/><span className="text-[9px] text-slate-400">(Denominator)</span>
                       </td>
                       {ind.monthlyData.map((d: any) => {
@@ -379,14 +383,14 @@ export function EntryForm({ departments }: { departments: any }) {
                           </td>
                         )
                       })}
-                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 sticky right-0 z-20 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                         {sumDen > 0 ? sumDen.toLocaleString() : '-'}
                       </td>
                     </tr>
 
                     {/* Numerator Row */}
                     <tr className={`border-b border-slate-200 ${rowBg} hover:bg-slate-50 transition-colors`}>
-                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 sticky left-[300px] z-30 bg-slate-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
+                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 lg:sticky lg:left-[300px] z-30 bg-slate-50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
                         ผลงาน<br/><span className="text-[9px] text-slate-400">(Numerator)</span>
                       </td>
                       {ind.monthlyData.map((d: any) => {
@@ -402,13 +406,13 @@ export function EntryForm({ departments }: { departments: any }) {
                           </td>
                         )
                       })}
-                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 sticky right-0 z-20 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                         {sumDen > 0 ? sumNum.toLocaleString() : '-'}
                       </td>
                     </tr>
 
                     <tr className={`border-b-2 border-slate-300 ${rowBg}`}>
-                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 sticky left-[300px] z-30 bg-slate-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
+                      <td className={`border-r border-slate-200 p-2 text-center text-xs font-medium text-slate-600 lg:sticky lg:left-[300px] z-30 bg-slate-50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
                         ผลลัพธ์<br/><span className="text-[9px] text-slate-400">({ind.unit})</span>
                       </td>
                       {ind.monthlyData.map((d: any) => {
@@ -440,7 +444,7 @@ export function EntryForm({ departments }: { departments: any }) {
                           </td>
                         )
                       })}
-                      <td className={`p-2 text-center font-bold border-l border-slate-200 sticky right-0 z-20 shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)] ${isPass ? 'text-emerald-700 bg-emerald-100' : sumDen > 0 ? 'text-rose-700 bg-rose-100' : 'text-slate-500 bg-amber-50'}`}>
+                      <td className={`p-2 text-center font-bold border-l border-slate-200 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)] ${isPass ? 'text-emerald-700 bg-emerald-100' : sumDen > 0 ? 'text-rose-700 bg-rose-100' : 'text-slate-500 bg-amber-50'}`}>
                         {ytdResult}
                       </td>
                     </tr>
