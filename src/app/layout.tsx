@@ -22,9 +22,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th">
+    <html lang="th" suppressHydrationWarning>
       <body
-        className={`${prompt.variable} font-sans antialiased bg-slate-50 text-slate-900 min-h-screen flex flex-col`}
+        className={`${prompt.variable} font-sans antialiased bg-background text-foreground min-h-screen flex flex-col`}
       >
         <Providers>
           <Navbar />
