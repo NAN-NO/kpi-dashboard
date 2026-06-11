@@ -154,7 +154,7 @@ export function EntryForm({ departments }: { departments: any }) {
       <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center gap-4 justify-between sticky top-0 z-50">
         <div className="flex items-center gap-4 w-full sm:w-auto">
           <div className="flex flex-col gap-1 w-full sm:w-auto">
-            <Label className="text-xs text-slate-500 dark:text-slate-400">เลือกแผนก / PCT</Label>
+            <Label className="text-xs text-slate-500 dark:text-slate-300">เลือกแผนก / PCT</Label>
             <Select value={selectedDept} onValueChange={setSelectedDept}>
               <SelectTrigger className="w-full sm:w-[300px] h-9 font-medium">
                 <span data-slot="select-value" className="flex flex-1 text-left">
@@ -184,7 +184,7 @@ export function EntryForm({ departments }: { departments: any }) {
 
       {showAddInd && (
         <div className="p-6 bg-indigo-50/50 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm relative -mt-2 mb-6">
-          <h3 className="text-sm font-bold text-indigo-900 mb-4 flex items-center gap-2">
+          <h3 className="text-sm font-bold text-indigo-900 dark:text-indigo-100 mb-4 flex items-center gap-2">
             <PlusCircle className="h-4 w-4" /> สร้างตัวชี้วัดใหม่ในแผนกนี้
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
@@ -238,7 +238,7 @@ export function EntryForm({ departments }: { departments: any }) {
       )}
 
       <Card className="shadow-sm border-slate-300 dark:border-slate-600 overflow-hidden">
-        <div className="md:hidden text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 p-2 flex items-center justify-center gap-1 border-b border-slate-200 dark:border-slate-700">
+        <div className="md:hidden text-xs text-slate-500 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 p-2 flex items-center justify-center gap-1 border-b border-slate-200 dark:border-slate-700">
           <ArrowUpDown className="w-3 h-3 rotate-90" />
           <span>เลื่อนซ้าย-ขวาที่ตารางเพื่อดูและกรอกข้อมูลเดือนอื่น</span>
         </div>
@@ -257,14 +257,14 @@ export function EntryForm({ departments }: { departments: any }) {
                     {m}
                   </th>
                 ))}
-                <th className="border-b border-l border-slate-300 dark:border-slate-600 p-3 font-bold text-center bg-amber-50 text-amber-900 min-w-[80px] lg:sticky lg:right-0 z-40 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                <th className="border-b border-l border-slate-300 dark:border-slate-600 p-3 font-bold text-center bg-amber-50 dark:bg-amber-900/20 text-amber-900 dark:text-amber-100 min-w-[80px] lg:sticky lg:right-0 z-40 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                   รวม (YTD)
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-slate-900">
               {dept.indicators.map((ind: any, indIdx: number) => {
-                const rowBg = indIdx % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-slate-50 dark:bg-slate-800/50/30'
+                const rowBg = indIdx % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-slate-50 dark:bg-slate-800/30'
                 
                 // Calculate YTD dynamically based on current grid state
                 let sumNum = 0
@@ -297,13 +297,13 @@ export function EntryForm({ departments }: { departments: any }) {
                 return (
                   <React.Fragment key={ind.id}>
                     {/* Denominator Row */}
-                    <tr className={`border-b border-slate-200 dark:border-slate-700 ${rowBg} hover:bg-slate-50 dark:bg-slate-800/50 transition-colors`}>
+                    <tr className={`border-b border-slate-200 dark:border-slate-700 ${rowBg} hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors`}>
                       <td rowSpan={3} className={`border-r border-slate-200 dark:border-slate-700 p-4 lg:sticky lg:left-0 z-30 bg-white dark:bg-slate-900 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] align-top group`}>
                         {editingIndId === ind.id ? (
                           <div className="flex flex-col gap-2">
                             <Input value={editIndName} onChange={(e) => setEditIndName(e.target.value)} className="h-8 text-sm" />
                             <div className="flex items-center gap-2">
-                              <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">เป้าหมาย:</span>
+                              <span className="text-xs text-slate-500 dark:text-slate-300 whitespace-nowrap">เป้าหมาย:</span>
                               <Select value={editIndTargetType} onValueChange={(val) => setEditIndTargetType(val || '')}>
                                 <SelectTrigger className="h-8 w-20 text-sm bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600">
                                   <span data-slot="select-value" className="flex flex-1 text-left">{editIndTargetType}</span>
@@ -333,7 +333,7 @@ export function EntryForm({ departments }: { departments: any }) {
                               <Button size="sm" onClick={() => saveEditInd(ind.id)} className="h-7 px-2 bg-emerald-600 hover:bg-emerald-700 text-xs">
                                 <Check className="h-3 w-3 mr-1" /> บันทึก
                               </Button>
-                              <Button size="sm" variant="ghost" onClick={() => setEditingIndId(null)} className="h-7 px-2 text-slate-500 dark:text-slate-400">
+                              <Button size="sm" variant="ghost" onClick={() => setEditingIndId(null)} className="h-7 px-2 text-slate-500 dark:text-slate-300">
                                 <X className="h-3 w-3" />
                               </Button>
                             </div>
@@ -359,7 +359,7 @@ export function EntryForm({ departments }: { departments: any }) {
                                 variant="ghost" 
                                 size="icon" 
                                 onClick={() => handleDeleteInd(ind.id, ind.name)} 
-                                className="h-6 w-6 text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                                className="h-6 w-6 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:text-rose-300"
                               >
                                 <Trash2 className="h-3 w-3" />
                               </Button>
@@ -383,13 +383,13 @@ export function EntryForm({ departments }: { departments: any }) {
                           </td>
                         )
                       })}
-                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                      <td className="p-2 text-center font-semibold bg-amber-50 dark:bg-amber-900/20/50 dark:bg-amber-900/20 text-amber-900 dark:text-amber-100 border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                         {sumDen > 0 ? sumDen.toLocaleString() : '-'}
                       </td>
                     </tr>
 
                     {/* Numerator Row */}
-                    <tr className={`border-b border-slate-200 dark:border-slate-700 ${rowBg} hover:bg-slate-50 dark:bg-slate-800/50 transition-colors`}>
+                    <tr className={`border-b border-slate-200 dark:border-slate-700 ${rowBg} hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors`}>
                       <td className={`border-r border-slate-200 dark:border-slate-700 p-2 text-center text-xs font-medium text-slate-600 dark:text-slate-300 lg:sticky lg:left-[300px] z-30 bg-slate-50 dark:bg-slate-800/50 lg:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]`}>
                         ผลงาน<br/><span className="text-[9px] text-slate-400">(Numerator)</span>
                       </td>
@@ -406,7 +406,7 @@ export function EntryForm({ departments }: { departments: any }) {
                           </td>
                         )
                       })}
-                      <td className="p-2 text-center font-semibold bg-amber-50/50 text-amber-900 border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                      <td className="p-2 text-center font-semibold bg-amber-50 dark:bg-amber-900/20/50 dark:bg-amber-900/20 text-amber-900 dark:text-amber-100 border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                         {sumDen > 0 ? sumNum.toLocaleString() : '-'}
                       </td>
                     </tr>
@@ -444,7 +444,7 @@ export function EntryForm({ departments }: { departments: any }) {
                           </td>
                         )
                       })}
-                      <td className={`p-2 text-center font-bold border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)] ${isPass ? 'text-emerald-700 bg-emerald-100' : sumDen > 0 ? 'text-rose-700 bg-rose-100' : 'text-slate-500 dark:text-slate-400 bg-amber-50'}`}>
+                      <td className={`p-2 text-center font-bold border-l border-slate-200 dark:border-slate-700 lg:sticky lg:right-0 z-20 lg:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.05)] ${isPass ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/50' : sumDen > 0 ? 'text-rose-700 dark:text-rose-300 bg-rose-100 dark:bg-rose-900/50' : 'text-slate-500 dark:text-slate-300 bg-amber-50 dark:bg-amber-900/20'}`}>
                         {ytdResult}
                       </td>
                     </tr>

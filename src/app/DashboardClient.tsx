@@ -170,7 +170,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">ภาพรวมตัวชี้วัด (Executive Summary)</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">สรุปสถานการณ์ตัวชี้วัดคุณภาพทางคลินิก ปีงบประมาณ 2569</p>
+          <p className="text-slate-500 dark:text-slate-300 mt-1">สรุปสถานการณ์ตัวชี้วัดคุณภาพทางคลินิก ปีงบประมาณ 2569</p>
         </div>
         <div className="w-full sm:w-72">
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1.5">เลือกแผนก (PCT)</label>
@@ -214,11 +214,11 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                       strokeLinecap="round"
                     />
                   </svg>
-                  <span className="absolute text-lg font-bold text-emerald-700">{Math.round(percent)}%</span>
+                  <span className="absolute text-lg font-bold text-emerald-700 dark:text-emerald-300">{Math.round(percent)}%</span>
                 </div>
 
                 <div className="flex flex-col bg-slate-50 dark:bg-slate-800/50 w-full py-2 rounded-lg border border-slate-100 dark:border-slate-800">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 mb-0.5">ผ่านเกณฑ์</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-300 mb-0.5">ผ่านเกณฑ์</span>
                   <span className="text-sm font-bold text-emerald-600">{dept.passed} / {dept.total} ตัวชี้วัด</span>
                 </div>
               </CardContent>
@@ -240,7 +240,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               </div>
               <button 
                 onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
-                className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-2.5 py-1.5 rounded hover:bg-slate-50 dark:bg-slate-800/50 transition-colors shadow-sm"
+                className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-2.5 py-1.5 rounded hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors shadow-sm"
                 title="เรียงตามเปอร์เซ็นต์ที่ผ่าน"
               >
                 <ArrowUpDown className="w-3.5 h-3.5" />
@@ -259,7 +259,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                   <div key={deptName} className="border-b border-slate-100 dark:border-slate-800 last:border-b-0">
                     <div 
                       onClick={() => toggleDept(deptName)}
-                      className="bg-slate-50 dark:bg-slate-800/50/80 px-4 py-3 sticky top-0 z-10 backdrop-blur-sm border-b border-slate-100 dark:border-slate-800 font-semibold text-sm text-indigo-900 shadow-sm flex items-center justify-between cursor-pointer hover:bg-indigo-50/80 transition-all duration-300"
+                      className="bg-slate-50 dark:bg-slate-800/80 px-4 py-3 sticky top-0 z-10 backdrop-blur-sm border-b border-slate-100 dark:border-slate-800 font-semibold text-sm text-indigo-900 dark:text-indigo-100 shadow-sm flex items-center justify-between cursor-pointer hover:bg-indigo-50/80 dark:hover:bg-indigo-900/30 dark:bg-indigo-900/30 transition-all duration-300"
                     >
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-4 bg-indigo-500 rounded-full"></div>
@@ -277,14 +277,14 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                                 strokeLinecap="round"
                               />
                             </svg>
-                            <span className="absolute text-[8px] font-bold text-emerald-700">{Math.round(percent)}%</span>
+                            <span className="absolute text-[8px] font-bold text-emerald-700 dark:text-emerald-300">{Math.round(percent)}%</span>
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-tight">ผ่านเกณฑ์</span>
-                            <span className="text-xs font-semibold text-emerald-700 leading-tight">{passed} / {total} ตัว</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-300 font-medium leading-tight">ผ่านเกณฑ์</span>
+                            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 leading-tight">{passed} / {total} ตัว</span>
                           </div>
                         </div>
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-500 dark:text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
+                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-500 dark:text-slate-300" /> : <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-300" />}
                       </div>
                     </div>
                     {isExpanded && (
@@ -293,7 +293,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                           <div 
                             key={ind.id}
                             onClick={() => setSelectedKpiId(ind.id)}
-                            className={`p-4 cursor-pointer transition-all duration-300 ease-in-out ${selectedKpiId === ind.id ? 'bg-blue-50/60 border-l-4 border-blue-600 shadow-inner' : 'border-l-4 border-transparent hover:bg-slate-50 dark:bg-slate-800/50 hover:translate-x-1 hover:shadow-sm'}`}
+                            className={`p-4 cursor-pointer transition-all duration-300 ease-in-out ${selectedKpiId === ind.id ? 'bg-blue-50/60 border-l-4 border-blue-600 shadow-inner' : 'border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:translate-x-1 hover:shadow-sm'}`}
                           >
                             <div className="flex justify-between items-start gap-2">
                               <div>
@@ -302,7 +302,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                                   <span className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded font-medium shadow-sm">
                                     เป้า: {ind.targetType} {ind.targetValue} {ind.unit && ind.unit !== 'n/a' ? ind.unit : ''}
                                   </span>
-                                  <span className="text-slate-500 dark:text-slate-400 font-medium">
+                                  <span className="text-slate-500 dark:text-slate-300 font-medium">
                                     ผล: {ind.ytdResult !== null ? ind.ytdResult.toFixed(2) : '-'} {ind.ytdResult !== null && ind.unit && ind.unit !== 'n/a' ? ind.unit : ''}
                                   </span>
                                 </div>
@@ -340,9 +340,9 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                     <CardTitle className="text-xl font-bold leading-tight text-slate-900 dark:text-white">{selectedKpiDetails.name}</CardTitle>
                   </div>
                   <Badge className={`px-3 py-1 text-sm font-medium ${
-                    selectedKpiDetails.isPass === true ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100' : 
-                    selectedKpiDetails.isPass === false ? 'bg-rose-100 text-rose-700 hover:bg-rose-100' : 
-                    'bg-amber-100 text-amber-700 hover:bg-amber-100'
+                    selectedKpiDetails.isPass === true ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:bg-emerald-900/50' : 
+                    selectedKpiDetails.isPass === false ? 'bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:bg-rose-900/50' : 
+                    'bg-amber-100 text-amber-700 dark:text-amber-300 hover:bg-amber-100'
                   }`}>
                     {selectedKpiDetails.isPass === true ? 'ผ่านเกณฑ์' : 
                      selectedKpiDetails.isPass === false ? 'ไม่ผ่านเกณฑ์' : 'ไม่มีข้อมูล'}
@@ -353,22 +353,22 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                   <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 text-center border border-slate-100 dark:border-slate-800">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">เป้าหมาย</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-300 font-medium mb-1">เป้าหมาย</p>
                     <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                      {selectedKpiDetails.targetType} {selectedKpiDetails.targetValue} <span className="text-sm font-normal text-slate-500 dark:text-slate-400">{selectedKpiDetails.unit}</span>
+                      {selectedKpiDetails.targetType} {selectedKpiDetails.targetValue} <span className="text-sm font-normal text-slate-500 dark:text-slate-300">{selectedKpiDetails.unit}</span>
                     </p>
                   </div>
                   <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 text-center border border-slate-100 dark:border-slate-800">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">ผลงานสะสม (YTD)</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-300 font-medium mb-1">ผลงานสะสม (YTD)</p>
                     <p className={`text-2xl font-bold ${
                       selectedKpiDetails.isPass === true ? 'text-emerald-600' : 
                       selectedKpiDetails.isPass === false ? 'text-rose-600' : 'text-slate-900 dark:text-white'
                     }`}>
-                      {selectedKpiDetails.ytdResult !== null ? selectedKpiDetails.ytdResult.toFixed(2) : '-'} <span className="text-sm font-normal text-slate-500 dark:text-slate-400">{selectedKpiDetails.unit}</span>
+                      {selectedKpiDetails.ytdResult !== null ? selectedKpiDetails.ytdResult.toFixed(2) : '-'} <span className="text-sm font-normal text-slate-500 dark:text-slate-300">{selectedKpiDetails.unit}</span>
                     </p>
                   </div>
                   <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 text-center border border-slate-100 dark:border-slate-800">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-1">ความก้าวหน้า</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-300 font-medium mb-1">ความก้าวหน้า</p>
                     <p className="text-2xl font-bold text-blue-600">
                       {selectedKpiDetails.denSum > 0 ? (selectedKpiDetails.numSum + '/' + selectedKpiDetails.denSum) : '-'}
                     </p>
@@ -396,7 +396,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                   </ResponsiveContainer>
                 </div>
 
-                <div className="md:hidden text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center justify-end gap-1">
+                <div className="md:hidden text-xs text-slate-500 dark:text-slate-300 mb-2 flex items-center justify-end gap-1">
                   <ArrowUpDown className="w-3 h-3 rotate-90" />
                   <span>เลื่อนซ้าย-ขวาเพื่อดูข้อมูลเพิ่มเติม</span>
                 </div>
@@ -410,15 +410,15 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                     </thead>
                     <tbody>
                       <tr className="border-b border-slate-100 dark:border-slate-800">
-                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50/50">ผลงาน (Numerator)</td>
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50">ผลงาน (Numerator)</td>
                         {chartData.map((d: any, i: number) => <td key={i} className="px-2 py-3 text-center">{d.num || '-'}</td>)}
                       </tr>
                       <tr className="border-b border-slate-100 dark:border-slate-800">
-                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50/50">เป้าหมาย (Denominator)</td>
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50">เป้าหมาย (Denominator)</td>
                         {chartData.map((d: any, i: number) => <td key={i} className="px-2 py-3 text-center">{d.den || '-'}</td>)}
                       </tr>
                       <tr>
-                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50/50">ผลลัพธ์รายเดือน</td>
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-800/50">ผลลัพธ์รายเดือน</td>
                         {chartData.map((d: any, i: number) => (
                           <td key={i} className="px-2 py-3 text-center font-semibold text-blue-600">
                             {d.ผลงานรายเดือน !== null ? d.ผลงานรายเดือน : '-'}
@@ -433,7 +433,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
             </Card>
           ) : (
             <Card className="shadow-sm border-slate-200 dark:border-slate-700 overflow-hidden animate-in fade-in duration-500">
-              <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50/50 pb-4">
+              <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 pb-4">
                 <CardTitle className="text-lg font-bold text-slate-800 dark:text-slate-100">
                   สรุปผลรายเดือน: {selectedDeptFocus ? selectedDeptFocus : (selectedDeptId === 'all' ? 'ภาพรวมทุกแผนก' : initialData.find(d => d.id === selectedDeptId)?.name)}
                 </CardTitle>
@@ -477,22 +477,22 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                   }, {} as Record<string, typeof filteredIndicatorsList>)
                 ).map(([deptName, inds]) => (
                   <div key={deptName} className="mb-0">
-                    <div className="bg-indigo-50/80 px-4 py-2 border-y border-indigo-100 font-semibold text-indigo-900 text-sm sticky left-0">
+                    <div className="bg-indigo-50/80 dark:bg-indigo-900/30 px-4 py-2 border-y border-indigo-100 font-semibold text-indigo-900 dark:text-indigo-100 text-sm sticky left-0">
                       {deptName}
                     </div>
                     <table className="w-full text-xs text-left border-collapse min-w-[800px]">
-                      <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
+                      <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
                         <tr>
                           <th className="p-3 font-medium min-w-[250px] max-w-[300px] sticky left-0 bg-slate-50 dark:bg-slate-800/50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">ตัวชี้วัด</th>
                           <th className="p-3 font-medium text-center border-r border-slate-100 dark:border-slate-800">เป้า</th>
                           {monthNames.map(m => <th key={m} className="p-2 font-medium text-center">{m}</th>)}
-                          <th className="p-3 font-medium text-center border-l border-slate-200 dark:border-slate-700 bg-amber-50/50">YTD</th>
+                          <th className="p-3 font-medium text-center border-l border-slate-200 dark:border-slate-700 bg-amber-50 dark:bg-amber-900/20/50 dark:bg-amber-900/20">YTD</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
                         {(inds as any[]).map((ind: any) => (
-                          <tr key={ind.id} className="hover:bg-slate-50 dark:bg-slate-800/50 transition-colors cursor-pointer group" onClick={() => setSelectedKpiId(ind.id)}>
-                            <td className="p-3 sticky left-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:bg-slate-800/50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">
+                          <tr key={ind.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group" onClick={() => setSelectedKpiId(ind.id)}>
+                            <td className="p-3 sticky left-0 bg-white dark:bg-slate-900 group-hover:bg-slate-50 dark:group-hover:bg-slate-800/50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">
                               <p className="font-medium text-slate-800 dark:text-slate-100 line-clamp-2" title={ind.name}>{ind.name}</p>
                             </td>
                             <td className="p-3 text-center whitespace-nowrap border-r border-slate-100 dark:border-slate-800">
@@ -506,8 +506,8 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                                   <div 
                                     className={`w-full min-w-[36px] py-1 px-1 rounded-md text-[11px] font-bold text-center transition-all group-hover:scale-[1.05] shadow-sm ${
                                       m.isPass === true 
-                                        ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' 
-                                        : 'bg-rose-100 text-rose-700 border border-rose-200'
+                                        ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200' 
+                                        : 'bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 border border-rose-200'
                                     }`} 
                                     title={`${monthNames[idx]} - ผล: ${m.result !== null ? m.result.toFixed(2) : '-'} (${m.isPass ? 'ผ่าน' : 'ไม่ผ่าน'})`}
                                   >
@@ -520,9 +520,9 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
                                 )}
                               </td>
                             ))}
-                            <td className="p-3 text-center border-l border-slate-200 dark:border-slate-700 bg-amber-50/20">
+                            <td className="p-3 text-center border-l border-slate-200 dark:border-slate-700 bg-amber-50 dark:bg-amber-900/20/20 dark:bg-amber-900/10">
                               {ind.denSum > 0 ? (
-                                <Badge className={`px-2 py-0.5 text-[10px] font-semibold ${ind.isPass === true ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                                <Badge className={`px-2 py-0.5 text-[10px] font-semibold ${ind.isPass === true ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300'}`}>
                                   {ind.ytdResult !== null ? ind.ytdResult.toFixed(2) : '-'}
                                 </Badge>
                               ) : (
