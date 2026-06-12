@@ -10,6 +10,40 @@ import { Button } from "@/components/ui/button"
 import { Save, AlertCircle, Edit2, Check, X, PlusCircle, Trash2, ArrowUpDown } from "lucide-react"
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
+function CellInput({ value, onChange, placeholder = "-" }: { value: number | null, onChange: (val: string) => void, placeholder?: string }) {
+  const [val, setVal] = useState(value === null ? '' : value.toString())
+  
+  useEffect(() => {
+    setVal(value === null ? '' : value.toString())
+  }, [value])
+
+  return (
+    <Input 
+      type="number"
+      placeholder={placeholder}
+      value={val}
+      onChange={e => setVal(e.target.value)}
+      onBlur={() => {
+        const newValue = value === null ? '' : value.toString();
+        if (val !== newValue) {
+          onChange(val);
+        }
+      }}
+      onKeyDown={e => {
+        if (e.key === 'Enter') {
+          const newValue = value === null ? '' : value.toString();
+          if (val !== newValue) {
+            onChange(val);
+          }
+        }
+      }}
+      onFocus={e => {
+        e.target.select()
+      }}
+      className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
+    />
+  )
+}
 
 export function EntryForm({ departments }: { departments: any }) {
   const router = useRouter()
@@ -387,13 +421,10 @@ export function EntryForm({ departments }: { departments: any }) {
                         const gridData = dataGrid[d.id] || d
                         return (
                           <td key={`den-${d.id}`} className="border-r border-slate-200 dark:border-slate-700 p-1">
-                            <Input 
-                              type="number" 
+                            <CellInput 
                               placeholder="-"
-                              value={gridData.denominator === null ? '' : gridData.denominator} 
-                              onChange={e => handleDenChange(d.id, e.target.value)}
-                              onFocus={e => e.target.select()}
-                              className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
+                              value={gridData.denominator}
+                              onChange={val => handleDenChange(d.id, val)}
                             />
                           </td>
                         )
@@ -412,13 +443,10 @@ export function EntryForm({ departments }: { departments: any }) {
                         const gridData = dataGrid[d.id] || d
                         return (
                           <td key={`num-${d.id}`} className="border-r border-slate-200 dark:border-slate-700 p-1">
-                            <Input 
-                              type="number" 
+                            <CellInput 
                               placeholder="-"
-                              value={gridData.numerator === null ? '' : gridData.numerator}
-                              onChange={e => handleNumChange(d.id, e.target.value)}
-                              onFocus={e => e.target.select()}
-                              className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
+                              value={gridData.numerator}
+                              onChange={val => handleNumChange(d.id, val)}
                             />
                           </td>
                         )
