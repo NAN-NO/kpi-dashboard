@@ -168,7 +168,7 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
                     newTexts[qIdx] = e.target.value;
                     setAnalysisTexts(newTexts);
                   }}
-                  className={`flex-1 p-1.5 rounded text-xs resize-none overflow-hidden outline-none transition min-h-[44px] border ${isPending ? 'border-amber-300 dark:border-amber-700' : 'border-slate-200 dark:border-slate-700'} ${isLocked ? 'bg-white/40 dark:bg-slate-900/40' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
+                  className={`flex-1 p-1.5 rounded text-xs resize-none overflow-hidden outline-none transition min-h-[88px] border ${isPending ? 'border-amber-300 dark:border-amber-700' : 'border-slate-200 dark:border-slate-700'} ${isLocked ? 'bg-white/40 dark:bg-slate-900/40' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
                   placeholder={isPending ? 'รอดำเนินการ — ยังไม่ถึงไตรมาสนี้' : 'วิเคราะห์/แนวทางพัฒนา ' + q.name}
                 />
                 <button 
