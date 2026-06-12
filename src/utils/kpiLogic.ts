@@ -23,6 +23,13 @@ export interface KPI {
 export const MONTH_NAMES = ['ต.ค.','พ.ย.','ธ.ค.','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.'];
 export const MONTH_FULL = ['ตุลาคม','พฤศจิกายน','ธันวาคม','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน'];
 
+/** Safe parseFloat that returns 0 instead of NaN to prevent NaN propagation */
+export function safeParseFloat(val: string | number | null | undefined): number {
+  if (val === null || val === undefined || val === '') return 0;
+  const num = typeof val === 'number' ? val : parseFloat(val);
+  return isNaN(num) ? 0 : num;
+}
+
 export function calcRate(num: number, den: number, unit: string) {
   return den > 0 ? (num / den) * (unit === '%' ? 100 : 1000) : 0;
 }
@@ -45,8 +52,8 @@ export function getLatestMonthData(kpi: KPI, maxIdx: number) {
   for (let i = maxIdx; i >= 0; i--) {
     const md = kpi.monthlyData[i];
     if (md) {
-      if (latestActual === null && md.actual !== null && md.actual !== '') latestActual = parseFloat(md.actual);
-      if (latestTarget === null && md.target !== null && md.target !== '') latestTarget = parseFloat(md.target);
+      if (latestActual === null && md.actual !== null && md.actual !== '') latestActual = safeParseFloat(md.actual);
+      if (latestTarget === null && md.target !== null && md.target !== '') latestTarget = safeParseFloat(md.target);
     }
     if (latestActual !== null && latestTarget !== null) break;
   }
@@ -64,8 +71,8 @@ export function _computeKpiResult(kpi: KPI, maxIdx: number) {
   let sumNum = 0, sumDen = 0, hasData = false;
   for (let i = 0; i <= maxIdx; i++) {
     const md = kpi.monthlyData[i];
-    if (md && md.actual !== null && md.actual !== '') { sumNum += parseFloat(md.actual); hasData = true; }
-    if (md && md.target !== null && md.target !== '') sumDen += parseFloat(md.target);
+    if (md && md.actual !== null && md.actual !== '') { sumNum += safeParseFloat(md.actual); hasData = true; }
+    if (md && md.target !== null && md.target !== '') sumDen += safeParseFloat(md.target);
   }
   if (!hasData) return { hasData: false, rate: 0 };
   return { hasData: true, rate: calcRate(sumNum, sumDen, kpi.unit) };
@@ -79,9 +86,9 @@ export function getAccumulatedSnapshot(kpi: KPI, maxIdx: number) {
       const md = kpi.monthlyData[i];
       if (md) {
         if (latestActual === null && md.actual !== null && md.actual !== '')
-            latestActual = parseFloat(md.actual);
+            latestActual = safeParseFloat(md.actual);
         if (latestTarget === null && md.target !== null && md.target !== '')
-            latestTarget = parseFloat(md.target);
+            latestTarget = safeParseFloat(md.target);
       }
       if (latestActual !== null && latestTarget !== null) break;
     }
@@ -101,11 +108,11 @@ export function getAccumulatedSnapshot(kpi: KPI, maxIdx: number) {
   for (let i = 0; i <= maxIdx; i++) {
     const md = kpi.monthlyData[i];
     if (md && md.actual !== null && md.actual !== '') {
-        totalActual += parseFloat(md.actual);
+        totalActual += safeParseFloat(md.actual);
         hasAnyActual = true;
     }
     if (md && md.target !== null && md.target !== '') {
-        totalTarget += parseFloat(md.target);
+        totalTarget += safeParseFloat(md.target);
         hasAnyTarget = true;
     }
   }

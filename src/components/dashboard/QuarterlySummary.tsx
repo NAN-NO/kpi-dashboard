@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KPI, calcRate, checkPassTarget } from '@/utils/kpiLogic';
 
 interface Props {
@@ -26,6 +26,12 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
 
   const [locks, setLocks] = useState([true, true, true, true]);
   const [analysisTexts, setAnalysisTexts] = useState(kpi.analysis || ['', '', '', '']);
+
+  // Sync analysisTexts when kpi changes (user switches KPI in selector)
+  useEffect(() => {
+    setAnalysisTexts(kpi.analysis || ['', '', '', '']);
+    setLocks([true, true, true, true]);
+  }, [kpi.id, kpi.analysis]);
 
   const handleToggleLock = (qIdx: number) => {
     if (!session) {

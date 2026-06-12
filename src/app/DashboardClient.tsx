@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { OverviewSection } from '@/components/dashboard/OverviewSection';
 import { KpiSelector } from '@/components/dashboard/KpiSelector';
@@ -8,9 +8,11 @@ import { KpiDetailCard } from '@/components/dashboard/KpiDetailCard';
 import { ChartsRow } from '@/components/dashboard/ChartsRow';
 import { MonthlyTable } from '@/components/dashboard/MonthlyTable';
 import { QuarterlySummary } from '@/components/dashboard/QuarterlySummary';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { updateMonthlyData } from './actions';
 import { updateQuarterlySummary } from './actions/quarterly';
 import { evaluateKpiSummaryStatus } from '@/utils/kpiLogic';
+import { toast } from 'react-hot-toast';
 
 export function DashboardClient({ initialData }: { initialData: any[] }) {
   const { data: session } = useSession();
@@ -18,10 +20,10 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
   // Transform initialData into our appData format
   const appData = useMemo(() => {
     const list: any[] = [];
-    initialData.forEach(dept => {
-      dept.indicators.forEach((ind: any) => {
+    (initialData ?? []).forEach(dept => {
+      (dept?.indicators ?? []).forEach((ind: any) => {
         const monthlyData = Array.from({ length: 12 }, (_, i) => {
-          const m = ind.monthlyData.find((md: any) => md.month === i + 1);
+          const m = ind.monthlyData?.find((md: any) => md.month === i + 1);
           // Support both legacy (num=0, den=null) and new (num=null, den=null) as empty
           const isEmpty = (m?.numerator === 0 && m?.denominator === null) || (m?.numerator === null && m?.denominator === null);
           // Auto-set actual to '0' on load if denominator exists but numerator is null
@@ -55,11 +57,11 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
           id: ind.id,
           category: dept.name,
           name: ind.name,
-          isHDC: false, // You might need to derive this from your DB if you added it
+          isHDC: false,
           numeratorLabel: 'ผลงาน (Numerator)',
           denominatorLabel: 'เป้าหมาย (Denominator)',
           targetText: `${ind.targetType} ${ind.targetValue} ${displayUnit}`.trim(),
-          targetValue: parseFloat(ind.targetValue),
+          targetValue: parseFloat(ind.targetValue) || 0,
           operator: ind.targetType,
           unit: displayUnit,
           monthlyData,
@@ -83,8 +85,8 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
   const latestMonthIdx = useMemo(() => {
     let latest = 0;
     data.forEach(kpi => {
-      kpi.monthlyData.forEach((md: any, i: number) => {
-        if (md.actual !== null || md.target !== null) {
+      kpi.monthlyData?.forEach((md: any, i: number) => {
+        if (md?.actual !== null || md?.target !== null) {
           if (i > latest) latest = i;
         }
       });
@@ -107,36 +109,58 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
     return { passCount, failCount, noDataCount, fails, totalCount: data.length };
   }, [data, latestMonthIdx]);
 
-  const handleUpdateMonthly = async (kpiId: number, monthIdx: number, type: 'actual' | 'target', value: number | null) => {
+  const handleUpdateMonthly = useCallback(async (kpiId: number, monthIdx: number, type: 'actual' | 'target', value: number | null) => {
+    // Save previous state for rollback
+    const prevData = data.map(d => ({ ...d, monthlyData: d.monthlyData.map((md: any) => ({ ...md })) }));
+
     // Optimistic UI update
     const newData = [...data];
     const kpiIdx = newData.findIndex(k => k.id === kpiId);
-    if (kpiIdx !== -1) {
-      newData[kpiIdx].monthlyData[monthIdx][type] = value !== null ? String(value) : null;
-      setData(newData);
+    if (kpiIdx === -1) return;
 
-      const md = newData[kpiIdx].monthlyData[monthIdx];
-      // Sync to DB
-      if (md.id) {
+    newData[kpiIdx] = {
+      ...newData[kpiIdx],
+      monthlyData: newData[kpiIdx].monthlyData.map((md: any, i: number) =>
+        i === monthIdx ? { ...md, [type]: value !== null ? String(value) : null } : md
+      )
+    };
+    setData(newData);
+
+    const md = newData[kpiIdx].monthlyData[monthIdx];
+    // Sync to DB
+    if (md?.id) {
+      try {
         await updateMonthlyData(
           md.id,
-          type === 'actual' ? (value || 0) : Number(md.actual || 0),
+          type === 'actual' ? (value ?? 0) : Number(md.actual || 0),
           type === 'target' ? value : (md.target !== null ? Number(md.target) : null)
         );
+      } catch (error) {
+        // Rollback on failure
+        setData(prevData);
+        toast.error('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่');
       }
     }
-  };
+  }, [data]);
 
-  const handleUpdateQuarterly = async (kpiId: number, qIdx: number, text: string) => {
+  const handleUpdateQuarterly = useCallback(async (kpiId: number, qIdx: number, text: string) => {
+    // Save previous state for rollback
+    const prevData = data.map(d => ({ ...d, analysis: [...d.analysis] }));
+
     // Optimistic UI update
     const newData = [...data];
     const kpiIdx = newData.findIndex(k => k.id === kpiId);
-    if (kpiIdx !== -1) {
-      newData[kpiIdx].analysis[qIdx] = text;
-      setData(newData);
+    if (kpiIdx === -1) return;
 
-      const kpi = newData[kpiIdx];
-      // Sync to DB
+    newData[kpiIdx] = {
+      ...newData[kpiIdx],
+      analysis: newData[kpiIdx].analysis.map((a: string, i: number) => i === qIdx ? text : a)
+    };
+    setData(newData);
+
+    const kpi = newData[kpiIdx];
+    // Sync to DB
+    try {
       await updateQuarterlySummary({
         indicatorId: kpi.id,
         year: kpi.year,
@@ -145,8 +169,12 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
         q3Text: kpi.analysis[2],
         q4Text: kpi.analysis[3],
       });
+    } catch (error) {
+      // Rollback on failure
+      setData(prevData);
+      toast.error('บันทึกข้อมูลไตรมาสไม่สำเร็จ กรุณาลองใหม่');
     }
-  };
+  }, [data]);
 
   const currentKpi = data[selectedKpiIndex];
 
@@ -172,13 +200,15 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
         </div>
 
         {!overviewCollapsed && (
-          <OverviewSection 
-            total={overview.totalCount} 
-            pass={overview.passCount} 
-            fail={overview.failCount} 
-            noData={overview.noDataCount} 
-            kpis={overview.fails} 
-          />
+          <ErrorBoundary fallbackTitle="ไม่สามารถแสดงข้อมูลภาพรวมได้">
+            <OverviewSection 
+              total={overview.totalCount} 
+              pass={overview.passCount} 
+              fail={overview.failCount} 
+              noData={overview.noDataCount} 
+              kpis={overview.fails} 
+            />
+          </ErrorBoundary>
         )}
 
         {/* Toggle Detail Section Button */}
@@ -202,22 +232,24 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
         </div>
 
         {!detailsCollapsed && currentKpi && (
-          <div className="space-y-1">
-            <KpiSelector 
-              kpis={data}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              selectedKpiIndex={selectedKpiIndex}
-              setSelectedKpiIndex={setSelectedKpiIndex}
-            />
+          <ErrorBoundary fallbackTitle="ไม่สามารถแสดงรายละเอียดตัวชี้วัดได้">
+            <div className="space-y-1">
+              <KpiSelector 
+                kpis={data}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                selectedKpiIndex={selectedKpiIndex}
+                setSelectedKpiIndex={setSelectedKpiIndex}
+              />
 
-            <div key={currentKpi.id} className="flex flex-col gap-1.5 mt-2">
-              <KpiDetailCard kpi={currentKpi} allKpis={data} />
-              <ChartsRow kpi={currentKpi} />
-              <MonthlyTable kpi={currentKpi} session={session} updateMonthlyData={handleUpdateMonthly} />
-              <QuarterlySummary kpi={currentKpi} session={session} updateQuarterlyData={handleUpdateQuarterly} />
+              <div key={currentKpi.id} className="flex flex-col gap-1.5 mt-2">
+                <KpiDetailCard kpi={currentKpi} allKpis={data} />
+                <ChartsRow kpi={currentKpi} />
+                <MonthlyTable kpi={currentKpi} session={session} updateMonthlyData={handleUpdateMonthly} />
+                <QuarterlySummary kpi={currentKpi} session={session} updateQuarterlyData={handleUpdateQuarterly} />
+              </div>
             </div>
-          </div>
+          </ErrorBoundary>
         )}
 
       </main>
