@@ -37,6 +37,7 @@ model Indicator {
   updatedAt    DateTime      @updatedAt
   department   Department    @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   monthlyData  MonthlyData[]
+  quarterlyData QuarterlySummary[]
 
   @@unique([name, departmentId])
 }
@@ -46,7 +47,7 @@ model MonthlyData {
   indicatorId String
   year        Int
   month       Int
-  numerator   Float
+  numerator   Float?
   denominator Float?
   result      Float?
   isPass      Boolean?
@@ -55,4 +56,19 @@ model MonthlyData {
   indicator   Indicator @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
 
   @@unique([indicatorId, year, month])
+}
+
+model QuarterlySummary {
+  id          String    @id @default(uuid())
+  indicatorId String
+  year        Int
+  q1Text      String?   @default("รอดำเนินการ")
+  q2Text      String?   @default("รอดำเนินการ")
+  q3Text      String?   @default("รอดำเนินการ")
+  q4Text      String?   @default("รอดำเนินการ")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  indicator   Indicator @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
+
+  @@unique([indicatorId, year])
 }

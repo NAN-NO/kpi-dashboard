@@ -92,7 +92,12 @@ export function EntryForm({ departments }: { departments: any }) {
     departments.forEach((dept: any) => {
       dept.indicators.forEach((ind: any) => {
         ind.monthlyData.forEach((d: any) => {
-          initialGrid[d.id] = { ...d }
+          let num = (d.numerator === 0 && d.denominator === null) ? null : d.numerator;
+          // Auto-set numerator to 0 if denominator exists but numerator is null
+          if (d.denominator !== null && num === null) {
+            num = 0;
+          }
+          initialGrid[d.id] = { ...d, numerator: num }
         })
       })
     })
@@ -105,7 +110,7 @@ export function EntryForm({ departments }: { departments: any }) {
   const handleNumChange = (id: string, val: string) => {
     setDataGrid(prev => ({
       ...prev,
-      [id]: { ...prev[id], numerator: val === '' ? 0 : Number(val) }
+      [id]: { ...prev[id], numerator: val === '' ? null : Number(val) }
     }))
   }
 
@@ -384,8 +389,10 @@ export function EntryForm({ departments }: { departments: any }) {
                           <td key={`den-${d.id}`} className="border-r border-slate-200 dark:border-slate-700 p-1">
                             <Input 
                               type="number" 
-                              value={gridData.denominator === null || Number(gridData.denominator) === 0 ? '' : gridData.denominator} 
+                              placeholder="-"
+                              value={gridData.denominator === null ? '' : gridData.denominator} 
                               onChange={e => handleDenChange(d.id, e.target.value)}
+                              onFocus={e => e.target.select()}
                               className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
                             />
                           </td>
@@ -407,8 +414,10 @@ export function EntryForm({ departments }: { departments: any }) {
                           <td key={`num-${d.id}`} className="border-r border-slate-200 dark:border-slate-700 p-1">
                             <Input 
                               type="number" 
-                              value={Number(gridData.numerator) === 0 ? '' : gridData.numerator}
+                              placeholder="-"
+                              value={gridData.numerator === null ? '' : gridData.numerator}
                               onChange={e => handleNumChange(d.id, e.target.value)}
+                              onFocus={e => e.target.select()}
                               className="h-8 w-16 text-center px-1 text-xs mx-auto focus-visible:ring-2 focus-visible:ring-indigo-500 bg-transparent border-slate-200 dark:border-slate-700"
                             />
                           </td>

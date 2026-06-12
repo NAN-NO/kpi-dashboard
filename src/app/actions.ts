@@ -8,7 +8,7 @@ import { calculateResult, checkIsPass } from "@/lib/calculations"
 // --- Validation Schemas ---
 const updateDataSchema = z.object({
   id: z.string().uuid(),
-  numerator: z.number().min(0),
+  numerator: z.number().nullable(),
   denominator: z.number().nullable().refine((val) => val === null || val >= 0, {
     message: "Denominator must be positive or null"
   })
@@ -27,7 +27,7 @@ const createIndicatorSchema = z.object({
   year: z.number().int().positive().default(2569)
 })
 
-export async function updateMonthlyData(dataId: string, numerator: number, denominator: number | null) {
+export async function updateMonthlyData(dataId: string, numerator: number | null, denominator: number | null) {
   const parsed = updateDataSchema.parse({ id: dataId, numerator, denominator })
   
   const monthlyData = await prisma.monthlyData.findUnique({
@@ -55,31 +55,33 @@ export async function updateMonthlyData(dataId: string, numerator: number, denom
   revalidatePath('/entry')
 }
 
-export async function updateIndicatorData(updates: { id: string, numerator: number, denominator: number | null }[]) {
+export async function updateIndicatorData(updates: { id: string, numerator: number | null, denominator: number | null }[]) {
   const parsedUpdates = z.array(updateDataSchema).parse(updates)
   
-  for (const update of parsedUpdates) {
-    const monthlyData = await prisma.monthlyData.findUnique({
-      where: { id: update.id },
-      include: { indicator: true }
-    })
-    
-    if (monthlyData) {
-      const ind = monthlyData.indicator
-      const result = calculateResult(update.numerator, update.denominator, ind.unit)
-      const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
-
-      await prisma.monthlyData.update({
+  await prisma.$transaction(async (tx) => {
+    for (const update of parsedUpdates) {
+      const monthlyData = await tx.monthlyData.findUnique({
         where: { id: update.id },
-        data: {
-          numerator: update.numerator,
-          denominator: update.denominator,
-          result,
-          isPass
-        }
+        include: { indicator: true }
       })
+      
+      if (monthlyData) {
+        const ind = monthlyData.indicator
+        const result = calculateResult(update.numerator, update.denominator, ind.unit)
+        const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
+
+        await tx.monthlyData.update({
+          where: { id: update.id },
+          data: {
+            numerator: update.numerator,
+            denominator: update.denominator,
+            result,
+            isPass
+          }
+        })
+      }
     }
-  }
+  })
 
   revalidatePath('/')
   revalidatePath('/entry')
@@ -115,7 +117,7 @@ export async function createIndicator(name: string, targetValue: number, targetT
       indicatorId: ind.id,
       year: parsed.year,
       month,
-      numerator: 0,
+      numerator: null,
       denominator: null, // Start with null for empty
     })
   }
@@ -148,14 +150,15 @@ export async function deleteDepartment(id: string) {
 export async function updateIndicator(id: string, name: string, targetValue: number, targetType: string, unit: string) {
   const parsed = z.object({ id: z.string().uuid(), name: z.string().min(1), targetValue: z.number(), targetType: z.string(), unit: z.string() }).parse({ id, name, targetValue, targetType, unit })
   await prisma.indicator.update({ where: { id: parsed.id }, data: { name: parsed.name, targetValue: parsed.targetValue, targetType: parsed.targetType, unit: parsed.unit } })
-  // Should also re-calculate all monthly data for this indicator because targetValue or type changed
-  const monthlyData = await prisma.monthlyData.findMany({ where: { indicatorId: parsed.id }, include: { indicator: true } })
-  for (const data of monthlyData) {
-    if (data.result !== null) {
-      const isPass = checkIsPass(data.result, parsed.targetType, parsed.targetValue)
-      await prisma.monthlyData.update({ where: { id: data.id }, data: { isPass } })
+  await prisma.$transaction(async (tx) => {
+    const monthlyData = await tx.monthlyData.findMany({ where: { indicatorId: parsed.id }, include: { indicator: true } })
+    for (const data of monthlyData) {
+      if (data.result !== null) {
+        const isPass = checkIsPass(data.result, parsed.targetType, parsed.targetValue)
+        await tx.monthlyData.update({ where: { id: data.id }, data: { isPass } })
+      }
     }
-  }
+  })
 
   revalidatePath('/settings')
   revalidatePath('/entry')

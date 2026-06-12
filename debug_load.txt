@@ -1,0 +1,14 @@
+N
+    // ─────────────────────────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+        // Step 1: load data from localStorage (or defaults)
+        loadInitialData();
+
+        // Step 2: auto-detect เดือนล่าสุดที่มีข้อมูล
+        autoSetLatestMonth();
+
+        // Step 3: populate filters & selectors
+        initFilters();
+        updateKpiSelector();
+
+        // 
