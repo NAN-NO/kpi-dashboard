@@ -89,7 +89,7 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                 })}
                 {kpi.isHDC ? (
                   <td className="px-2 py-1.5 text-center bg-slate-100 font-semibold border-l border-slate-200">
-                    {latestTarget !== null ? latestTarget.toLocaleString() : '-'}
+                    {latestTarget !== null ? (latestTarget as number).toLocaleString() : '-'}
                   </td>
                 ) : (
                   <td className="px-2 py-1 text-center bg-slate-100 border-l border-slate-200 leading-tight" rowSpan={2}>
@@ -128,7 +128,7 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                 })}
                 {kpi.isHDC && (
                   <td className="px-2 py-1.5 text-center bg-slate-100 font-semibold border-l border-slate-200">
-                    {latestActual !== null ? latestActual.toLocaleString() : '-'}
+                    {latestActual !== null ? (latestActual as number).toLocaleString() : '-'}
                   </td>
                 )}
               </tr>

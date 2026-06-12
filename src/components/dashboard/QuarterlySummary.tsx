@@ -82,8 +82,8 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
           let headerBg = 'linear-gradient(135deg, #1e293b 0%, #475569 100%)';
           let isPending = false;
 
-          const dispActual = hasData ? (kpi.isHDC && qLatestActual !== null ? qLatestActual : qNum).toLocaleString() : '-';
-          const dispTarget = kpi.isHDC ? (qLatestTarget !== null ? `${qLatestTarget.toLocaleString()} (ทั้งหมด)` : 'N/A') : qDen.toLocaleString();
+          const dispActual = hasData ? (kpi.isHDC && qLatestActual !== null ? (qLatestActual as number) : qNum).toLocaleString() : '-';
+          const dispTarget = kpi.isHDC ? (qLatestTarget !== null ? `${(qLatestTarget as number).toLocaleString()} (ทั้งหมด)` : 'N/A') : qDen.toLocaleString();
 
           if (quarterNotStarted) {
             statusText = 'รอดำเนินการ';

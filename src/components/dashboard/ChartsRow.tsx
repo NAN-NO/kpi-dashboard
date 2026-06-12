@@ -6,21 +6,21 @@ import { Line, Bar } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler);
 
 export function ChartsRow({ kpi }: { kpi: KPI }) {
-  const lineDataPoints = [];
-  const barActuals = [];
-  const barTargets = [];
+  const lineDataPoints: (number | null)[] = [];
+  const barActuals: (number | null)[] = [];
+  const barTargets: (number | null)[] = [];
 
   if (kpi.isHDC) {
     kpi.monthlyData.forEach(md => {
       const hasActual = md.actual !== null && md.actual !== '';
       const hasTarget = md.target !== null && md.target !== '';
-      if (hasActual && hasTarget && parseFloat(md.target) > 0) {
-        lineDataPoints.push(parseFloat(calcRate(parseFloat(md.actual), parseFloat(md.target), kpi.unit).toFixed(2)));
+      if (hasActual && hasTarget && parseFloat(md.target as string) > 0) {
+        lineDataPoints.push(parseFloat(calcRate(parseFloat(md.actual as string), parseFloat(md.target as string), kpi.unit).toFixed(2)));
       } else {
         lineDataPoints.push(null);
       }
-      barActuals.push(hasActual ? parseFloat(md.actual) : null);
-      barTargets.push(hasTarget ? parseFloat(md.target) : null);
+      barActuals.push(hasActual ? parseFloat(md.actual as string) : null);
+      barTargets.push(hasTarget ? parseFloat(md.target as string) : null);
     });
   } else {
     let totalActual = 0, totalTarget = 0;
@@ -28,11 +28,11 @@ export function ChartsRow({ kpi }: { kpi: KPI }) {
 
     kpi.monthlyData.forEach(md => {
       if (md.actual !== null && md.actual !== '') {
-        totalActual += parseFloat(md.actual);
+        totalActual += parseFloat(md.actual as string);
         hasAnyActual = true;
       }
       if (md.target !== null && md.target !== '') {
-        totalTarget += parseFloat(md.target);
+        totalTarget += parseFloat(md.target as string);
         hasAnyTarget = true;
       }
       if (hasAnyActual && hasAnyTarget && totalTarget > 0) {
@@ -42,8 +42,8 @@ export function ChartsRow({ kpi }: { kpi: KPI }) {
       } else {
         lineDataPoints.push(null);
       }
-      barActuals.push(md.actual !== null && md.actual !== '' ? parseFloat(md.actual) : null);
-      barTargets.push(md.target !== null && md.target !== '' ? parseFloat(md.target) : null);
+      barActuals.push(md.actual !== null && md.actual !== '' ? parseFloat(md.actual as string) : null);
+      barTargets.push(md.target !== null && md.target !== '' ? parseFloat(md.target as string) : null);
     });
   }
 

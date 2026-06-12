@@ -38,7 +38,7 @@ export async function updateMonthlyData(dataId: string, numerator: number | null
   if (!monthlyData) throw new Error("Data not found")
   
   const ind = monthlyData.indicator
-  const result = calculateResult(parsed.numerator, parsed.denominator, ind.unit)
+  const result = calculateResult(parsed.numerator ?? 0, parsed.denominator ?? 0, ind.unit)
   const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
 
   await prisma.monthlyData.update({
@@ -67,7 +67,7 @@ export async function updateIndicatorData(updates: { id: string, numerator: numb
       
       if (monthlyData) {
         const ind = monthlyData.indicator
-        const result = calculateResult(update.numerator, update.denominator, ind.unit)
+        const result = calculateResult(update.numerator ?? 0, update.denominator ?? 0, ind.unit)
         const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
 
         await tx.monthlyData.update({

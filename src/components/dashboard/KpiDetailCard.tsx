@@ -1,5 +1,5 @@
 import React from 'react';
-import { KPI, getAccumulatedSnapshot, checkPassTarget, getCategorySummaryStatus } from '@/utils/kpiLogic';
+import { KPI, getAccumulatedSnapshot, checkPassTarget } from '@/utils/kpiLogic';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 

@@ -80,7 +80,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
   const latestMonthIdx = useMemo(() => {
     let latest = 0;
     data.forEach(kpi => {
-      kpi.monthlyData.forEach((md, i) => {
+      kpi.monthlyData.forEach((md: any, i: number) => {
         if (md.actual !== null || md.target !== null) {
           if (i > latest) latest = i;
         }
