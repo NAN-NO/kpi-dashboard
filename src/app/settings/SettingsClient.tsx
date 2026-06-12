@@ -69,17 +69,17 @@ export function SettingsClient({ departments }: { departments: any[] }) {
   return (
     <div className="space-y-6">
       {/* Admin Header & Tabs */}
-      <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-200 inline-flex gap-2 w-full sm:w-auto">
+      <div className="bg-white dark:bg-slate-900 p-2 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 inline-flex gap-2 w-full sm:w-auto">
         <button 
           onClick={() => setActiveTab('DATA')}
-          className={`flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${activeTab === 'DATA' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`}
+          className={`flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${activeTab === 'DATA' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
         >
           <Edit2 className="h-4 w-4" />
           จัดการตัวชี้วัดและบันทึกผลงาน
         </button>
         <button 
           onClick={() => setActiveTab('DEPT')}
-          className={`flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${activeTab === 'DEPT' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100'}`}
+          className={`flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${activeTab === 'DEPT' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
         >
           <Building2 className="h-4 w-4" />
           จัดการแผนก
@@ -90,11 +90,11 @@ export function SettingsClient({ departments }: { departments: any[] }) {
 
       {/* --- TAB: DEPARTMENTS --- */}
       {activeTab === 'DEPT' && (
-        <Card className="shadow-sm border-slate-300 w-full">
-          <CardHeader className="bg-slate-50 border-b pb-4">
+        <Card className="shadow-sm border-slate-300 dark:border-slate-700 w-full bg-white dark:bg-slate-900">
+          <CardHeader className="bg-slate-50 dark:bg-slate-800/50 border-b dark:border-slate-800 pb-4">
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle className="text-xl text-slate-800">จัดการแผนก (PCT)</CardTitle>
+                <CardTitle className="text-xl text-slate-800 dark:text-white">จัดการแผนก (PCT)</CardTitle>
                 <CardDescription>เพิ่ม ลบ หรือแก้ไขชื่อแผนกรับผิดชอบตัวชี้วัด</CardDescription>
               </div>
               <Button onClick={() => setShowAddDept(!showAddDept)} className="h-10 gap-2 bg-indigo-600 hover:bg-indigo-700">
@@ -105,10 +105,10 @@ export function SettingsClient({ departments }: { departments: any[] }) {
           </CardHeader>
 
           {showAddDept && (
-            <div className="p-6 bg-indigo-50/50 border-b border-slate-200 flex flex-col sm:flex-row gap-4 items-end">
+            <div className="p-6 bg-indigo-50/50 dark:bg-indigo-900/20 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row gap-4 items-end">
               <div className="flex-1">
                 <Label>ชื่อแผนกใหม่</Label>
-                <Input value={deptName} onChange={e => setDeptName(e.target.value)} placeholder="เช่น PCT อายุรกรรม" className="bg-white mt-1.5" />
+                <Input value={deptName} onChange={e => setDeptName(e.target.value)} placeholder="เช่น PCT อายุรกรรม" className="bg-white dark:bg-slate-950 mt-1.5 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100" />
               </div>
               <Button onClick={handleCreateDept} disabled={savingDept || !deptName} className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto">
                 {savingDept ? 'กำลังบันทึก...' : 'บันทึกแผนกใหม่'}
@@ -118,24 +118,24 @@ export function SettingsClient({ departments }: { departments: any[] }) {
 
           <div className="p-0">
             <table className="w-full text-sm text-left">
-              <thead className="bg-white text-slate-600 border-b border-slate-200">
+              <thead className="bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
                 <tr>
                   <th className="p-4 font-semibold">ชื่อแผนก</th>
                   <th className="p-4 font-semibold text-center w-[150px]">จำนวนตัวชี้วัด</th>
                   <th className="p-4 font-semibold text-right w-[150px]">จัดการ</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {departments.map((d) => (
-                  <tr key={d.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="p-4">
                       {editingDeptId === d.id ? (
                         <Input value={editDeptName} onChange={e => setEditDeptName(e.target.value)} className="h-8 max-w-sm" autoFocus />
                       ) : (
-                        <span className="font-semibold text-slate-800">{d.name}</span>
+                        <span className="font-semibold text-slate-800 dark:text-slate-200">{d.name}</span>
                       )}
                     </td>
-                    <td className="p-4 text-center text-slate-500">
+                    <td className="p-4 text-center text-slate-500 dark:text-slate-400">
                       {d.indicators.length} รายการ
                     </td>
                     <td className="p-4 text-right">
@@ -150,10 +150,10 @@ export function SettingsClient({ departments }: { departments: any[] }) {
                         </div>
                       ) : (
                         <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600 hover:bg-blue-50" onClick={() => startEditDept(d.id, d.name)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30" onClick={() => startEditDept(d.id, d.name)}>
                             <Edit2 className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-rose-600 hover:bg-rose-50" onClick={() => handleDeleteDept(d.id, d.name)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30" onClick={() => handleDeleteDept(d.id, d.name)}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -163,7 +163,7 @@ export function SettingsClient({ departments }: { departments: any[] }) {
                 ))}
                 {departments.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="p-8 text-center text-slate-500">ยังไม่มีข้อมูลแผนกในระบบ</td>
+                    <td colSpan={3} className="p-8 text-center text-slate-500 dark:text-slate-400">ยังไม่มีข้อมูลแผนกในระบบ</td>
                   </tr>
                 )}
               </tbody>

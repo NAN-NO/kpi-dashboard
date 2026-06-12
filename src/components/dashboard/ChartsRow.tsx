@@ -109,18 +109,18 @@ export function ChartsRow({ kpi }: { kpi: KPI }) {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { labels: { boxWidth: 8, font: { size: 9.5 } } }
+      legend: { labels: { boxWidth: 8, font: { size: 9.5 }, color: '#888' } }
     },
     scales: {
-      y: { beginAtZero: true, ticks: { font: { size: 8.5 } } },
-      x: { ticks: { font: { size: 9.5 } } }
+      y: { beginAtZero: true, grid: { color: 'rgba(150,150,150,0.15)' }, ticks: { font: { size: 8.5 }, color: '#888' } },
+      x: { grid: { color: 'rgba(150,150,150,0.15)' }, ticks: { font: { size: 9.5 }, color: '#888' } }
     }
   };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-      <div className="bg-white rounded-lg shadow border border-purple-200 p-1.5" style={{ background: 'linear-gradient(135deg,#fff 0%,#faf5ff 100%)' }}>
-        <h3 className="text-[10px] font-bold text-purple-700 mb-0.5 flex items-center gap-1">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow border border-purple-200 dark:border-purple-900/50 p-1.5">
+        <h3 className="text-[10px] font-bold text-purple-700 dark:text-purple-300 mb-0.5 flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-purple-500 inline-block"></span>
           {kpi.isHDC ? 'ผลลัพธ์รายเดือน (HDC)' : 'ผลลัพธ์สะสม'}
         </h3>
@@ -128,8 +128,8 @@ export function ChartsRow({ kpi }: { kpi: KPI }) {
           <Line data={lineData as any} options={options} />
         </div>
       </div>
-      <div className="bg-white rounded-lg shadow border border-teal-200 p-1.5" style={{ background: 'linear-gradient(135deg,#fff 0%,#f0fdfa 100%)' }}>
-        <h3 className="text-[10px] font-bold text-teal-700 mb-0.5 flex items-center gap-1">
+      <div className="bg-white dark:bg-slate-900 rounded-lg shadow border border-teal-200 dark:border-teal-900/50 p-1.5">
+        <h3 className="text-[10px] font-bold text-teal-700 dark:text-teal-300 mb-0.5 flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-teal-500 inline-block"></span>
           ปริมาณงาน (Volume)
         </h3>

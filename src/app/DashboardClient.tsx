@@ -48,6 +48,9 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
           ind.quarterlyData?.[0]?.q4Text || ''
         ];
 
+        const rawUnit = ind.unit !== 'n/a' ? ind.unit : '';
+        const displayUnit = rawUnit.replace(/ต่อ\s*/g, ': ');
+
         list.push({
           id: ind.id,
           category: dept.name,
@@ -55,10 +58,10 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
           isHDC: false, // You might need to derive this from your DB if you added it
           numeratorLabel: 'ผลงาน (Numerator)',
           denominatorLabel: 'เป้าหมาย (Denominator)',
-          targetText: `${ind.targetType} ${ind.targetValue} ${ind.unit !== 'n/a' ? ind.unit : ''}`,
+          targetText: `${ind.targetType} ${ind.targetValue} ${displayUnit}`.trim(),
           targetValue: parseFloat(ind.targetValue),
           operator: ind.targetType,
-          unit: ind.unit !== 'n/a' ? ind.unit : '',
+          unit: displayUnit,
           monthlyData,
           analysis: quarterlyData,
           year: 2569
@@ -148,14 +151,14 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
   const currentKpi = data[selectedKpiIndex];
 
   return (
-    <div className="bg-slate-50 min-h-screen text-slate-800 font-sans selection:bg-indigo-200 selection:text-indigo-900 relative">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen text-slate-800 dark:text-slate-200 font-sans selection:bg-indigo-200 dark:selection:bg-indigo-900 selection:text-indigo-900 dark:selection:text-indigo-100 relative transition-colors duration-300">
       <main className="px-4 py-4 w-full max-w-[2000px] mx-auto">
         
         {/* Toggle Overview Button */}
         <div className="flex justify-end mb-2 no-print">
           <button 
             onClick={() => setOverviewCollapsed(!overviewCollapsed)}
-            className="flex items-center gap-1.5 px-3 py-2 min-h-[44px] text-xs font-semibold text-slate-500 hover:text-slate-800 transition"
+            className="flex items-center gap-1.5 px-3 py-2 min-h-[44px] text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition"
           >
             {overviewCollapsed ? 'แสดง Dashboard ภาพรวม' : 'ซ่อน Dashboard ภาพรวม'}
             <svg 
@@ -182,7 +185,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
         <div className="flex justify-center my-1 no-print">
           <button 
             onClick={() => setDetailsCollapsed(!detailsCollapsed)}
-            className="group flex items-center gap-2 px-5 py-2.5 min-h-[44px] rounded-full bg-white border border-slate-200 shadow-sm text-xs font-bold text-slate-600 hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95"
+            className="group flex items-center gap-2 px-5 py-2.5 min-h-[44px] rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all active:scale-95"
           >
             <span>{detailsCollapsed ? 'แสดงรายละเอียดตัวชี้วัดทั้งหมด' : 'ปิดการแสดงรายละเอียดตัวชี้วัด'}</span>
             <svg 
@@ -208,7 +211,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               setSelectedKpiIndex={setSelectedKpiIndex}
             />
 
-            <div className="flex flex-col gap-1.5 mt-2">
+            <div key={currentKpi.id} className="flex flex-col gap-1.5 mt-2">
               <KpiDetailCard kpi={currentKpi} allKpis={data} />
               <ChartsRow kpi={currentKpi} />
               <MonthlyTable kpi={currentKpi} session={session} updateMonthlyData={handleUpdateMonthly} />

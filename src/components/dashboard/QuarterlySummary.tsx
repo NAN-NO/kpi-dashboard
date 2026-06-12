@@ -46,12 +46,12 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
   };
 
   return (
-    <section className="bg-white rounded-lg shadow border border-emerald-200 overflow-hidden w-full">
+    <section className="bg-white dark:bg-slate-900 rounded-lg shadow border border-emerald-200 dark:border-emerald-900/50 overflow-hidden w-full">
       <div className="px-2 py-1 flex justify-between items-center" style={{ background: 'linear-gradient(135deg, #064e3b 0%, #059669 100%)' }}>
         <h3 className="font-semibold text-white text-xs">สรุปผลประจำไตรมาส + วิเคราะห์ปัญหา</h3>
         <span className="text-[9px] text-emerald-200 font-medium">4 ไตรมาส</span>
       </div>
-      <div className="flex flex-col gap-2 p-2 bg-slate-50/50">
+      <div className="flex flex-col gap-2 p-2 bg-slate-50/50 dark:bg-slate-900">
         {QUARTERS.map((q, qIdx) => {
           let qNum = 0, qDen = 0, hasData = false, monthsWithData = 0;
           let qLatestActual: number | null = null, qLatestTarget: number | null = null;
@@ -77,8 +77,8 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
           const isComplete = monthsWithData >= 3;
 
           let rateStr = '-', statusText = 'ไม่มีข้อมูล';
-          let cardClass = 'bg-white border-slate-200 text-slate-400';
-          let badgeClass = 'bg-slate-100 text-slate-600';
+          let cardClass = 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500';
+          let badgeClass = 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
           let headerBg = 'linear-gradient(135deg, #1e293b 0%, #475569 100%)';
           let isPending = false;
 
@@ -87,8 +87,8 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
 
           if (quarterNotStarted) {
             statusText = 'รอดำเนินการ';
-            cardClass = 'bg-gradient-to-br from-yellow-50 to-amber-50 border-yellow-300 text-yellow-900';
-            badgeClass = 'bg-yellow-400 text-yellow-900';
+            cardClass = 'bg-gradient-to-br from-yellow-50 dark:from-yellow-900/30 to-amber-50 dark:to-amber-900/30 border-yellow-300 dark:border-yellow-700 text-yellow-900 dark:text-yellow-200';
+            badgeClass = 'bg-yellow-400 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100';
             headerBg = 'linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)';
             isPending = true;
           } else if (hasData && isComplete && !quarterNotEnded) {
@@ -97,26 +97,26 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
             
             if (checkPassTarget(rate, kpi.operator, kpi.targetValue)) {
               statusText = 'ผ่าน';
-              cardClass = 'bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200 text-emerald-900';
-              badgeClass = 'bg-emerald-500 text-white';
+              cardClass = 'bg-gradient-to-br from-emerald-50 dark:from-emerald-900/30 to-teal-50 dark:to-teal-900/30 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200';
+              badgeClass = 'bg-emerald-500 dark:bg-emerald-600 text-white';
               headerBg = 'linear-gradient(135deg, #064e3b 0%, #059669 100%)';
             } else {
               statusText = 'ไม่ผ่าน';
-              cardClass = 'bg-gradient-to-br from-rose-50 to-orange-50 border-rose-200 text-rose-900';
-              badgeClass = 'bg-rose-500 text-white';
+              cardClass = 'bg-gradient-to-br from-rose-50 dark:from-rose-900/30 to-orange-50 dark:to-orange-900/30 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200';
+              badgeClass = 'bg-rose-500 dark:bg-rose-600 text-white';
               headerBg = 'linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)';
             }
           } else if (quarterNotEnded && !quarterNotStarted) {
             statusText = 'รอดำเนินการ';
-            cardClass = 'bg-gradient-to-br from-yellow-50 to-amber-50 border-yellow-300 text-yellow-900';
-            badgeClass = 'bg-yellow-400 text-yellow-900';
+            cardClass = 'bg-gradient-to-br from-yellow-50 dark:from-yellow-900/30 to-amber-50 dark:to-amber-900/30 border-yellow-300 dark:border-yellow-700 text-yellow-900 dark:text-yellow-200';
+            badgeClass = 'bg-yellow-400 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100';
             headerBg = 'linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)';
             isPending = true;
             if (hasData) rateStr = `${monthsWithData}/3 เดือน`;
           } else if (hasData && !isComplete) {
             statusText = 'ข้อมูลไม่ครบ';
-            cardClass = 'bg-white border-amber-200 text-amber-800';
-            badgeClass = 'bg-amber-100 text-amber-700';
+            cardClass = 'bg-white dark:bg-slate-800 border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-200';
+            badgeClass = 'bg-amber-100 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300';
             headerBg = 'linear-gradient(135deg, #78350f 0%, #d97706 100%)';
             rateStr = `${monthsWithData}/3 เดือน`;
           }
@@ -152,8 +152,8 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
                   </div>
                 </div>
               </div>
-              <div className="px-3 py-2 flex items-start gap-2" style={{ background: isPending ? 'linear-gradient(135deg,#fefce8 0%,#fef9c3 100%)' : 'white' }}>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider mt-1.5 flex-shrink-0" style={{ color: isPending ? '#92400e' : '#64748b' }}>วิเคราะห์/แนวทางพัฒนา:</span>
+              <div className={`px-3 py-2 flex items-start gap-2 ${isPending ? 'bg-amber-50/50 dark:bg-amber-900/10' : 'bg-white dark:bg-slate-800'}`}>
+                <span className={`text-[10px] font-extrabold uppercase tracking-wider mt-1.5 flex-shrink-0 ${isPending ? 'text-amber-900 dark:text-amber-500' : 'text-slate-500 dark:text-slate-400'}`}>วิเคราะห์/แนวทางพัฒนา:</span>
                 <textarea
                   value={isPending && !textVal ? 'รอดำเนินการ' : textVal}
                   readOnly={isLocked}
@@ -162,13 +162,12 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
                     newTexts[qIdx] = e.target.value;
                     setAnalysisTexts(newTexts);
                   }}
-                  className="flex-1 p-1.5 rounded text-xs resize-none overflow-hidden outline-none transition"
-                  style={{ minHeight: '44px', background: isLocked ? 'rgba(255,255,255,0.4)' : 'white', border: `1px solid ${isPending ? '#fbbf24' : '#e2e8f0'}` }}
+                  className={`flex-1 p-1.5 rounded text-xs resize-none overflow-hidden outline-none transition min-h-[44px] border ${isPending ? 'border-amber-300 dark:border-amber-700' : 'border-slate-200 dark:border-slate-700'} ${isLocked ? 'bg-white/40 dark:bg-slate-900/40' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
                   placeholder={isPending ? 'รอดำเนินการ — ยังไม่ถึงไตรมาสนี้' : 'วิเคราะห์/แนวทางพัฒนา ' + q.name}
                 />
                 <button 
                   onClick={() => handleToggleLock(qIdx)}
-                  className={`text-xs px-3 py-2 min-h-[36px] rounded font-semibold transition shrink-0 mt-1 ${isLocked ? 'bg-slate-200 text-slate-700 hover:bg-slate-300' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+                  className={`text-xs px-3 py-2 min-h-[36px] rounded font-semibold transition shrink-0 mt-1 ${isLocked ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600' : 'bg-blue-600 dark:bg-blue-700 text-white hover:bg-blue-700 dark:hover:bg-blue-600'}`}
                 >
                   {isLocked ? 'ปลดล็อก' : 'อัปเดต'}
                 </button>

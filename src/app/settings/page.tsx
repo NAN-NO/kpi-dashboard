@@ -22,8 +22,8 @@ export default async function SettingsPage() {
   return (
     <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">จัดการระบบและข้อมูล</h1>
-        <p className="text-slate-500 mt-1">ตั้งค่าแผนก ตัวชี้วัด และบันทึกข้อมูลผลงาน</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">จัดการระบบและข้อมูล</h1>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">ตั้งค่าแผนก ตัวชี้วัด และบันทึกข้อมูลผลงาน</p>
       </div>
       <SettingsClient departments={departments} />
     </div>

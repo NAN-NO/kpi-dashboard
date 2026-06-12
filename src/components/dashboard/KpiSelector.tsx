@@ -52,8 +52,7 @@ export function KpiSelector({ kpis, selectedCategory, setSelectedCategory, selec
               const firstMatch = kpis.findIndex(k => e.target.value === 'ALL' || k.category === e.target.value);
               if (firstMatch !== -1) setSelectedKpiIndex(firstMatch);
             }}
-            className="w-full rounded-lg border-0 px-2.5 py-1.5 focus:ring-2 focus:ring-indigo-400 outline-none text-xs font-semibold text-indigo-900"
-            style={{ background: 'rgba(255,255,255,0.92)', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}
+            className="w-full rounded-lg border-0 px-2.5 py-1.5 focus:ring-2 focus:ring-indigo-400 outline-none text-xs font-semibold text-indigo-900 dark:text-indigo-100 bg-white/90 dark:bg-indigo-950/90 shadow-sm"
           >
             {categories.map(c => (
               <option key={c} value={c}>{c === 'ALL' ? 'แสดงทุกกลุ่มงาน' : c}</option>
@@ -68,8 +67,7 @@ export function KpiSelector({ kpis, selectedCategory, setSelectedCategory, selec
           <select
             value={selectedKpiIndex}
             onChange={(e) => setSelectedKpiIndex(parseInt(e.target.value))}
-            className="w-full rounded-lg border-0 px-2.5 py-1.5 focus:ring-2 focus:ring-purple-400 outline-none font-semibold text-xs text-indigo-900"
-            style={{ background: 'rgba(255,255,255,0.92)', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}
+            className="w-full rounded-lg border-0 px-2.5 py-1.5 focus:ring-2 focus:ring-purple-400 outline-none font-semibold text-xs text-indigo-900 dark:text-indigo-100 bg-white/90 dark:bg-indigo-950/90 shadow-sm"
           >
             {filteredKpis.map(k => (
               <option key={k.globalIndex} value={k.globalIndex}>
@@ -80,7 +78,7 @@ export function KpiSelector({ kpis, selectedCategory, setSelectedCategory, selec
         </div>
         <div className="flex items-end pb-0.5">
           {currentKpi && (
-            <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full flex-shrink-0 border border-white/20 backdrop-blur ${currentKpi.isHDC ? 'bg-amber-400/90 text-amber-900 border-amber-300/50' : 'bg-blue-400/90 text-blue-900 border-blue-300/50'}`}>
+            <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full flex-shrink-0 border border-white/20 backdrop-blur ${currentKpi.isHDC ? 'bg-amber-400/90 dark:bg-amber-900/50 text-amber-900 dark:text-amber-200 border-amber-300/50' : 'bg-blue-400/90 dark:bg-blue-900/50 text-blue-900 dark:text-blue-200 border-blue-300/50'}`}>
               {currentKpi.isHDC ? '📊 HDC Data KPI' : '🏥 Internal KPI'}
             </span>
           )}

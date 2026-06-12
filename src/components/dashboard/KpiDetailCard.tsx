@@ -63,14 +63,14 @@ export function KpiDetailCard({ kpi, allKpis }: Props) {
           <h3 className="font-semibold text-white text-xs">สรุปผลตัวชี้วัดที่เลือก</h3>
         </div>
 
-        <div className="w-full px-4 py-3 flex flex-col flex-1 items-center text-center gap-2" style={{ background: 'linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)' }}>
-          <h2 className="text-base font-extrabold leading-snug w-full" style={{ color: '#1e1b4b', wordBreak: 'break-word', textAlign: 'center' }}>
+        <div className="w-full px-4 py-3 flex flex-col flex-1 items-center text-center gap-2 bg-indigo-50 dark:bg-slate-900">
+          <h2 className="text-base font-extrabold leading-snug w-full text-indigo-950 dark:text-indigo-100 break-words text-center">
             {kpi.name}
           </h2>
 
           <div className="flex items-center justify-center gap-1.5">
-            <span className="text-sm font-bold" style={{ color: '#3730a3' }}>เกณฑ์:</span>
-            <span className="px-3 py-0.5 rounded text-sm font-extrabold" style={{ background: 'rgba(255,255,255,0.7)', color: '#1e40af', border: '1px solid #c7d2fe' }}>
+            <span className="text-sm font-bold text-indigo-800 dark:text-indigo-300">เกณฑ์:</span>
+            <span className="px-3 py-0.5 rounded text-sm font-extrabold bg-white/70 dark:bg-indigo-900/40 text-blue-800 dark:text-blue-300 border border-indigo-200 dark:border-indigo-800/50">
               {kpi.targetText}
             </span>
           </div>
@@ -98,7 +98,7 @@ export function KpiDetailCard({ kpi, allKpis }: Props) {
                 หน่วยดัชนี: {kpi.unit}
               </div>
               <div
-                className={`px-2.5 py-0.5 rounded-lg font-bold mt-1 text-[12px] ${!hasResult ? 'bg-slate-100/90 text-slate-600' : isPass ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}
+                className={`px-2.5 py-0.5 rounded-lg font-bold mt-1 text-[12px] ${!hasResult ? 'bg-slate-100/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300' : isPass ? 'bg-emerald-50 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300' : 'bg-rose-50 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300'}`}
               >
                 {!hasResult ? 'ไม่มีข้อมูล' : isPass ? '✓ ผ่านเกณฑ์' : '✗ ไม่ผ่านเกณฑ์'}
               </div>
@@ -106,15 +106,15 @@ export function KpiDetailCard({ kpi, allKpis }: Props) {
 
             <div className="flex flex-col gap-2 flex-1 text-left" style={{ minWidth: '120px' }}>
               <div className="flex flex-col gap-0.5">
-                <span className="text-xs font-semibold text-purple-700">{kpi.denominatorLabel}</span>
-                <span className="text-base font-extrabold px-2 py-0.5 rounded self-start bg-white/85 text-indigo-950 border border-indigo-200">
+                <span className="text-xs font-semibold text-purple-700 dark:text-purple-300">{kpi.denominatorLabel}</span>
+                <span className="text-base font-extrabold px-2 py-0.5 rounded self-start bg-white/85 dark:bg-slate-800/85 text-indigo-950 dark:text-indigo-100 border border-indigo-200 dark:border-indigo-800">
                   {targetDisplay}
                 </span>
               </div>
               <div className="w-full h-px bg-indigo-500/20"></div>
               <div className="flex flex-col gap-0.5">
-                <span className="text-xs font-semibold text-purple-700">{kpi.numeratorLabel}</span>
-                <span className="text-base font-extrabold px-2 py-0.5 rounded self-start bg-white/85 text-indigo-950 border border-indigo-200">
+                <span className="text-xs font-semibold text-purple-700 dark:text-purple-300">{kpi.numeratorLabel}</span>
+                <span className="text-base font-extrabold px-2 py-0.5 rounded self-start bg-white/85 dark:bg-slate-800/85 text-indigo-950 dark:text-indigo-100 border border-indigo-200 dark:border-indigo-800">
                   {actualDisplay}
                 </span>
               </div>

@@ -184,7 +184,7 @@ export function EntryForm({ departments }: { departments: any }) {
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button onClick={() => setShowAddInd(!showAddInd)} variant="outline" className="w-full sm:w-auto h-10 gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50">
+          <Button onClick={() => setShowAddInd(!showAddInd)} variant="outline" className="w-full sm:w-auto h-10 gap-2 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30">
             {showAddInd ? <X className="h-4 w-4" /> : <PlusCircle className="h-4 w-4" />}
             {showAddInd ? 'ยกเลิก' : 'เพิ่มตัวชี้วัด'}
           </Button>
@@ -196,7 +196,7 @@ export function EntryForm({ departments }: { departments: any }) {
       </div>
 
       {showAddInd && (
-        <div className="p-6 bg-indigo-50/50 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm relative -mt-2 mb-6">
+        <div className="p-6 bg-indigo-50/50 dark:bg-indigo-900/20 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm relative -mt-2 mb-6">
           <h3 className="text-sm font-bold text-indigo-900 dark:text-indigo-100 mb-4 flex items-center gap-2">
             <PlusCircle className="h-4 w-4" /> สร้างตัวชี้วัดใหม่ในแผนกนี้
           </h3>
@@ -356,7 +356,7 @@ export function EntryForm({ departments }: { departments: any }) {
                             <div className="font-medium text-slate-800 dark:text-slate-100 mb-2 leading-relaxed">
                               {ind.name}
                             </div>
-                            <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 font-semibold px-2 py-0.5 text-xs">
+                            <Badge variant="outline" className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 font-semibold px-2 py-0.5 text-xs">
                               เป้าหมาย: {ind.targetType} {ind.targetValue} {ind.unit}
                             </Badge>
                             <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity flex">
@@ -456,7 +456,7 @@ export function EntryForm({ departments }: { departments: any }) {
                         }
 
                         return (
-                          <td key={`res-${d.id}`} className={`border-r border-slate-200 dark:border-slate-700 p-2 text-center text-xs font-medium ${cellPass === true ? 'text-emerald-600 bg-emerald-50/50' : cellPass === false ? 'text-rose-600 bg-rose-50/50' : 'text-slate-400'}`}>
+                          <td key={`res-${d.id}`} className={`border-r border-slate-200 dark:border-slate-700 p-2 text-center text-xs font-medium ${cellPass === true ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-900/20' : cellPass === false ? 'text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-900/20' : 'text-slate-400 dark:text-slate-500'}`}>
                             {cellResult}
                           </td>
                         )

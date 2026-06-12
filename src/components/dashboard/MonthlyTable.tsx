@@ -12,6 +12,17 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
 
   let sumNum = 0, sumDen = 0, latestActual: number | null = null, latestTarget: number | null = null;
   
+  kpi.monthlyData.forEach(md => {
+    if (md.target !== null && md.target !== '') {
+      sumDen += parseFloat(md.target as string);
+      latestTarget = parseFloat(md.target as string);
+    }
+    if (md.actual !== null && md.actual !== '') {
+      sumNum += parseFloat(md.actual as string);
+      latestActual = parseFloat(md.actual as string);
+    }
+  });
+  
   const handleInput = (mIdx: number, type: 'actual' | 'target', valStr: string) => {
     if (!session) {
       alert('ต้องเข้าสู่ระบบเพื่อแก้ไขข้อมูล');
@@ -25,7 +36,7 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
   const targetLabel = kpi.isHDC ? 'เป้า (ผู้รับผิดชอบ)' : 'เป้า';
 
   return (
-    <section className="bg-white rounded-lg shadow border border-blue-200 overflow-hidden flex-shrink-0 w-full">
+    <section className="bg-white dark:bg-slate-900 rounded-lg shadow border border-blue-200 dark:border-blue-900/50 overflow-hidden flex-shrink-0 w-full">
       <div 
         className="px-2 py-1 section-header-blue flex items-center justify-between cursor-pointer select-none"
         onClick={() => setCollapsed(!collapsed)}
@@ -52,26 +63,22 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
             <thead>
-              <tr className="bg-slate-100 text-slate-700 border-b border-slate-200">
+              <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
                 <th className="px-2 py-0.5 font-bold min-w-[130px]">ข้อมูลรายเดือน</th>
                 {['ต.ค.','พ.ย.','ธ.ค.','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.'].map(m => (
                   <th key={m} className="px-0.5 py-0.5 text-center font-bold w-10">{m}</th>
                 ))}
-                <th className="px-1.5 py-0.5 text-center font-bold w-14 border-l border-slate-200 bg-slate-100">สะสม</th>
+                <th className="px-1.5 py-0.5 text-center font-bold w-14 border-l border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">สะสม</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
               {/* Target Row */}
-              <tr className="hover:bg-slate-50/80 transition text-xs">
+              <tr className="hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition text-xs">
                 <td className="px-2.5 py-1.5 min-w-[210px] whitespace-normal break-words leading-snug" title={kpi.denominatorLabel}>
-                  <span className="inline-block text-[10px] font-extrabold text-blue-700 bg-blue-50 border border-blue-200 rounded px-1 mr-1 leading-tight align-middle">{targetLabel}</span>
-                  <span className="font-medium text-slate-700">{kpi.denominatorLabel}{kpi.isHDC && <span className="text-amber-600 font-bold ml-1 text-[9px]">(จำนวนทั้งหมด)</span>}</span>
+                  <span className="inline-block text-[10px] font-extrabold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded px-1 mr-1 leading-tight align-middle">{targetLabel}</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-300">{kpi.denominatorLabel}{kpi.isHDC && <span className="text-amber-600 dark:text-amber-400 font-bold ml-1 text-[9px]">(จำนวนทั้งหมด)</span>}</span>
                 </td>
                 {kpi.monthlyData.map((md, i) => {
-                  if (md.target !== null && md.target !== '') {
-                    sumDen += parseFloat(md.target);
-                    latestTarget = parseFloat(md.target);
-                  }
                   return (
                     <td key={i} className="px-0.5 py-0.5 text-center">
                       <input 
@@ -81,36 +88,32 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                         onChange={(e) => handleInput(i, 'target', e.target.value)}
                         onFocus={e => e.target.select()}
                         disabled={!session}
-                        style={!session ? { background: '#f1f5f9', cursor: 'not-allowed' } : {}}
-                        className="w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300"
+                        style={!session ? { cursor: 'not-allowed' } : {}}
+                        className={`w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 ${!session ? 'bg-slate-100 dark:bg-slate-800' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
                       />
                     </td>
                   );
                 })}
                 {kpi.isHDC ? (
-                  <td className="px-2 py-1.5 text-center bg-slate-100 font-semibold border-l border-slate-200">
+                  <td className="px-2 py-1.5 text-center bg-slate-100 dark:bg-slate-800/80 font-semibold border-l border-slate-200 dark:border-slate-700">
                     {latestTarget !== null ? (latestTarget as number).toLocaleString() : '-'}
                   </td>
                 ) : (
-                  <td className="px-2 py-1 text-center bg-slate-100 border-l border-slate-200 leading-tight" rowSpan={2}>
-                    <div className="font-bold text-blue-700 text-sm">{sumDen.toLocaleString()}</div>
-                    <div className="w-8 h-px bg-slate-400 mx-auto my-0.5"></div>
-                    <div className="font-bold text-emerald-700 text-sm">{sumNum.toLocaleString()}</div> {/* we'll render this below but HTML needs it in one cell for rowspan */}
+                  <td className="px-2 py-1 text-center bg-slate-100 dark:bg-slate-800/80 border-l border-slate-200 dark:border-slate-700 leading-tight" rowSpan={2}>
+                    <div className="font-bold text-blue-700 dark:text-blue-400 text-sm">{sumDen.toLocaleString()}</div>
+                    <div className="w-8 h-px bg-slate-400 dark:bg-slate-600 mx-auto my-0.5"></div>
+                    <div className="font-bold text-emerald-700 dark:text-emerald-400 text-sm">{sumNum.toLocaleString()}</div> {/* we'll render this below but HTML needs it in one cell for rowspan */}
                   </td>
                 )}
               </tr>
 
               {/* Actual Row */}
-              <tr className="hover:bg-slate-50/80 transition text-xs">
+              <tr className="hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition text-xs">
                 <td className="px-2.5 py-1.5 min-w-[210px] whitespace-normal break-words leading-snug" title={kpi.numeratorLabel}>
-                  <span className="inline-block text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-1 mr-1 leading-tight align-middle">{actualLabel}</span>
-                  <span className="font-medium text-slate-700">{kpi.numeratorLabel}</span>
+                  <span className="inline-block text-[10px] font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded px-1 mr-1 leading-tight align-middle">{actualLabel}</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-300">{kpi.numeratorLabel}</span>
                 </td>
                 {kpi.monthlyData.map((md, i) => {
-                  if (md.actual !== null && md.actual !== '') {
-                    sumNum += parseFloat(md.actual);
-                    latestActual = parseFloat(md.actual);
-                  }
                   return (
                     <td key={i} className="px-0.5 py-0.5 text-center">
                       <input 
@@ -120,23 +123,23 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                         onChange={(e) => handleInput(i, 'actual', e.target.value)}
                         onFocus={e => e.target.select()}
                         disabled={!session}
-                        style={!session ? { background: '#f1f5f9', cursor: 'not-allowed' } : {}}
-                        className="w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300"
+                        style={!session ? { cursor: 'not-allowed' } : {}}
+                        className={`w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 ${!session ? 'bg-slate-100 dark:bg-slate-800' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
                       />
                     </td>
                   );
                 })}
                 {kpi.isHDC && (
-                  <td className="px-2 py-1.5 text-center bg-slate-100 font-semibold border-l border-slate-200">
+                  <td className="px-2 py-1.5 text-center bg-slate-100 dark:bg-slate-800/80 font-semibold border-l border-slate-200 dark:border-slate-700">
                     {latestActual !== null ? (latestActual as number).toLocaleString() : '-'}
                   </td>
                 )}
               </tr>
 
               {/* Rate Row */}
-              <tr className="bg-slate-50/40 text-xs">
-                <td className="px-2.5 py-1.5 font-bold text-slate-600">
-                  ผลลัพธ์{kpi.isHDC && <span className="text-[9px] font-normal text-amber-600"> (ณ เดือนนั้น)</span>}
+              <tr className="bg-slate-50/40 dark:bg-slate-800/20 text-xs">
+                <td className="px-2.5 py-1.5 font-bold text-slate-600 dark:text-slate-400">
+                  ผลลัพธ์{kpi.isHDC && <span className="text-[9px] font-normal text-amber-600 dark:text-amber-400"> (ณ เดือนนั้น)</span>}
                 </td>
                 {kpi.monthlyData.map((md, i) => {
                   const num = md.actual !== null && md.actual !== '' ? parseFloat(md.actual) : null;
@@ -175,7 +178,7 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                   }
 
                   return (
-                    <td className={`px-2 py-1.5 text-center ${totalPassClass} border-l border-slate-200 bg-blue-50 font-bold`}>
+                    <td className={`px-2 py-1.5 text-center ${totalPassClass} border-l border-slate-200 dark:border-slate-700 bg-blue-50 dark:bg-blue-900/20 font-bold`}>
                       {totalRateStr}
                     </td>
                   );

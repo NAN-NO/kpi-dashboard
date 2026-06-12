@@ -37,15 +37,15 @@ export function OverviewSection({ total, pass, fail, noData, kpis }: Props) {
 
   return (
     <section id="overviewDashboard" className="mb-3 print-break-inside">
-      <div id="overviewDashboardContent" className="bg-slate-50/50 rounded-lg p-2.5 space-y-2 border border-slate-200">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+      <div id="overviewDashboardContent" className="bg-slate-50/50 dark:bg-slate-900/50 rounded-lg p-2.5 space-y-2 border border-slate-200 dark:border-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
           <div className="flex items-center gap-1.5">
-            <label className="font-bold text-slate-600">ปีงบประมาณ:</label>
-            <span className="w-16 font-bold text-blue-700 border border-blue-200 rounded px-1.5 py-0.5 outline-none text-center bg-white">
+            <label className="font-bold text-slate-600 dark:text-slate-300">ปีงบประมาณ:</label>
+            <span className="w-16 font-bold text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/50 rounded px-1.5 py-0.5 outline-none text-center bg-white dark:bg-slate-800">
               2569
             </span>
           </div>
-          <div className="w-px h-3 bg-slate-300 hidden sm:block"></div>
+          <div className="w-px h-3 bg-slate-300 dark:bg-slate-700 hidden sm:block"></div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center mb-2">
@@ -117,7 +117,7 @@ export function OverviewSection({ total, pass, fail, noData, kpis }: Props) {
         </div>
 
         {/* Fail table */}
-        <div className="rounded-lg border border-rose-200 overflow-hidden shadow-sm">
+        <div className="rounded-lg border border-rose-200 dark:border-rose-900/30 overflow-hidden shadow-sm bg-white dark:bg-slate-900">
           <div className="section-header-rose px-2.5 py-1 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <svg className="w-3 h-3 text-rose-200 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,28 +136,28 @@ export function OverviewSection({ total, pass, fail, noData, kpis }: Props) {
                   <th className="px-2 py-1.5 font-semibold w-8 text-center">#</th>
                   <th className="px-2 py-1.5 font-semibold min-w-[110px]">กลุ่มงาน / PCT</th>
                   <th className="px-2 py-1.5 font-semibold min-w-[310px]">ชื่อตัวชี้วัด</th>
-                  <th className="px-2 py-1.5 font-semibold text-center w-20">เป้าหมาย</th>
-                  <th className="px-2 py-1.5 font-semibold text-center w-20">ผลลัพธ์</th>
+                  <th className="px-2 py-1.5 font-semibold text-left whitespace-nowrap">เป้าหมาย</th>
+                  <th className="px-2 py-1.5 font-semibold text-left whitespace-nowrap">ผลลัพธ์</th>
                   <th className="px-2 py-1.5 font-semibold text-center w-24">สถานะ</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-rose-50">
+              <tbody className="divide-y divide-rose-50 dark:divide-slate-800/50">
                 {kpis.length > 0 ? (
                   kpis.map((kpi, idx) => (
                     <tr key={idx} className="text-xs">
-                      <td className="px-2 py-1.5 text-center font-bold text-slate-400">{idx + 1}</td>
-                      <td className="px-2 py-1.5 text-slate-500 font-medium">{kpi.category}</td>
-                      <td className="px-2 py-1.5 font-medium text-slate-700 whitespace-normal leading-tight">{kpi.name}</td>
-                      <td className="px-2 py-1.5 text-center">
-                        <span className="px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-semibold">{kpi.targetText}</span>
+                      <td className="px-2 py-1.5 text-center font-bold text-slate-400 dark:text-slate-500">{idx + 1}</td>
+                      <td className="px-2 py-1.5 text-slate-500 dark:text-slate-400 font-medium">{kpi.category}</td>
+                      <td className="px-2 py-1.5 font-medium text-slate-700 dark:text-slate-200 whitespace-normal leading-tight">{kpi.name}</td>
+                      <td className="px-2 py-1.5 text-left whitespace-nowrap">
+                        <span className="px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 font-semibold">{kpi.targetText}</span>
                       </td>
-                      <td className="px-2 py-1.5 text-center font-bold text-rose-600">{kpi.rate.toFixed(2)}{kpi.unit}</td>
-                      <td className="px-2 py-1.5 text-center"><span className="status-fail text-rose-600">ไม่ผ่านเกณฑ์</span></td>
+                      <td className="px-2 py-1.5 text-left font-bold text-rose-600 dark:text-rose-400 whitespace-nowrap">{kpi.rate.toFixed(2)} {kpi.unit}</td>
+                      <td className="px-2 py-1.5 text-center whitespace-nowrap"><span className="status-fail">ไม่ผ่านเกณฑ์</span></td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={6} className="p-2 text-center text-slate-400 font-medium text-xs">
+                    <td colSpan={6} className="p-2 text-center text-slate-400 dark:text-slate-500 font-medium text-xs">
                       ไม่มีตัวชี้วัดที่ไม่ผ่านเกณฑ์ในเดือนนี้
                     </td>
                   </tr>

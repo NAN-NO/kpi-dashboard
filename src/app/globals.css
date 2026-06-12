@@ -132,12 +132,16 @@
         /* ── Base ── */
         body {
             font-family: 'Prompt', sans-serif;
-            background-color: #e8f0fe;
             background-image:
                 radial-gradient(ellipse at 20% 10%, rgba(99,102,241,0.10) 0%, transparent 50%),
                 radial-gradient(ellipse at 80% 90%, rgba(16,185,129,0.08) 0%, transparent 50%),
                 radial-gradient(ellipse at 60% 30%, rgba(59,130,246,0.07) 0%, transparent 40%);
-            /* Removed background-attachment: fixed to prevent mobile scroll lag / freeze */
+        }
+        .dark body {
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(99,102,241,0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 90%, rgba(16,185,129,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 30%, rgba(59,130,246,0.03) 0%, transparent 40%);
         }
 
         /* ── Remove number input spinners ── */
@@ -166,6 +170,8 @@
         }
         .kpi-summary-table tr:nth-child(even) { background-color: #f0f4ff; }
         .kpi-summary-table tr:hover { background-color: #dbeafe; transition: background 0.15s; }
+        .dark .kpi-summary-table tr:nth-child(even) { background-color: rgba(30, 41, 59, 0.5); }
+        .dark .kpi-summary-table tr:hover { background-color: rgba(51, 65, 85, 0.8); }
 
         /* ── Status badges ── */
         .status-pass {
@@ -173,14 +179,25 @@
             color: #065f46; font-weight: 700; border-radius: 6px; padding: 2px 8px;
             border: 1px solid #6ee7b7; display: inline-block; white-space: nowrap;
         }
+        .dark .status-pass {
+            background: linear-gradient(135deg, rgba(6,78,59,0.8), rgba(5,150,105,0.4));
+            color: #34d399; border-color: rgba(16,185,129,0.4);
+        }
         .status-fail {
             background: linear-gradient(135deg, #fee2e2, #fecaca);
             color: #991b1b; font-weight: 700; border-radius: 6px; padding: 2px 8px;
             border: 1px solid #fca5a5; display: inline-block; white-space: nowrap;
         }
+        .dark .status-fail {
+            background: linear-gradient(135deg, rgba(136,19,55,0.8), rgba(225,29,72,0.4));
+            color: #fb7185; border-color: rgba(244,63,94,0.4);
+        }
         .status-nodata {
             background: #f1f5f9; color: #64748b; font-weight: 600;
             border-radius: 6px; padding: 2px 8px; display: inline-block; white-space: nowrap;
+        }
+        .dark .status-nodata {
+            background: rgba(51,65,85,0.6); color: #cbd5e1;
         }
 
         /* ── Section header gradients ── */
@@ -211,6 +228,9 @@
         /* ── Section base shadow ── */
         section, .bg-white.rounded-xl {
             box-shadow: 0 2px 12px rgba(30,58,138,0.06), 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .dark section, .dark .bg-slate-900.rounded-xl, .dark .bg-slate-950.rounded-xl {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         /* ── Overview donut glow ── */
