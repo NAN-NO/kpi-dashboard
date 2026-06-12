@@ -39,6 +39,5 @@ export async function updateQuarterlySummary(data: z.infer<typeof updateQuarterl
     }
   })
 
-  revalidatePath('/')
-  revalidatePath('/entry')
+  revalidatePath('/', 'layout')
 }

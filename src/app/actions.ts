@@ -51,8 +51,7 @@ export async function updateMonthlyData(dataId: string, numerator: number | null
     }
   })
 
-  revalidatePath('/')
-  revalidatePath('/entry')
+  revalidatePath('/', 'layout')
 }
 
 export async function updateIndicatorData(updates: { id: string, numerator: number | null, denominator: number | null }[]) {
@@ -83,8 +82,7 @@ export async function updateIndicatorData(updates: { id: string, numerator: numb
     }
   })
 
-  revalidatePath('/')
-  revalidatePath('/entry')
+  revalidatePath('/', 'layout')
 }
 
 export async function createDepartment(name: string) {
@@ -92,9 +90,7 @@ export async function createDepartment(name: string) {
   await prisma.department.create({
     data: { name: parsed.name }
   })
-  revalidatePath('/settings')
-  revalidatePath('/entry')
-  revalidatePath('/')
+  revalidatePath('/', 'layout')
 }
 
 export async function createIndicator(name: string, targetValue: number, targetType: string, unit: string, departmentId: string, year: number = 2569) {
@@ -126,25 +122,19 @@ export async function createIndicator(name: string, targetValue: number, targetT
     data: dataToCreate
   })
 
-  revalidatePath('/settings')
-  revalidatePath('/entry')
-  revalidatePath('/')
+  revalidatePath('/', 'layout')
 }
 
 export async function updateDepartment(id: string, name: string) {
   const parsed = z.object({ id: z.string().uuid(), name: z.string().min(1) }).parse({ id, name })
   await prisma.department.update({ where: { id: parsed.id }, data: { name: parsed.name } })
-  revalidatePath('/settings')
-  revalidatePath('/entry')
-  revalidatePath('/')
+  revalidatePath('/', 'layout')
 }
 
 export async function deleteDepartment(id: string) {
   const parsed = z.object({ id: z.string().uuid() }).parse({ id })
   await prisma.department.delete({ where: { id: parsed.id } })
-  revalidatePath('/settings')
-  revalidatePath('/entry')
-  revalidatePath('/')
+  revalidatePath('/', 'layout')
 }
 
 export async function updateIndicator(id: string, name: string, targetValue: number, targetType: string, unit: string) {
@@ -160,15 +150,11 @@ export async function updateIndicator(id: string, name: string, targetValue: num
     }
   })
 
-  revalidatePath('/settings')
-  revalidatePath('/entry')
-  revalidatePath('/')
+  revalidatePath('/', 'layout')
 }
 
 export async function deleteIndicator(id: string) {
   const parsed = z.object({ id: z.string().uuid() }).parse({ id })
   await prisma.indicator.delete({ where: { id: parsed.id } })
-  revalidatePath('/settings')
-  revalidatePath('/entry')
-  revalidatePath('/')
+  revalidatePath('/', 'layout')
 }
