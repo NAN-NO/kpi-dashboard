@@ -108,7 +108,7 @@ export function ChartsRow({ kpi }: { kpi: KPI }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    animation: false, // Disable animation to prevent print layout bugs in Chart.js
+    animation: false as const, // Disable animation to prevent print layout bugs in Chart.js
     plugins: {
       legend: { labels: { boxWidth: 8, font: { size: 9.5 }, color: '#888' } }
     },
