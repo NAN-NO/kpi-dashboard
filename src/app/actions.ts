@@ -58,30 +58,32 @@ export async function updateIndicatorData(updates: { id: string, numerator: numb
   try {
     const parsedUpdates = z.array(updateDataSchema).parse(updates)
     
-    await prisma.$transaction(async (tx) => {
-      for (const update of parsedUpdates) {
-        const monthlyData = await tx.monthlyData.findUnique({
-          where: { id: update.id },
-          include: { indicator: true }
-        })
-        
-        if (monthlyData) {
-          const ind = monthlyData.indicator
-          const result = calculateResult(update.numerator ?? 0, update.denominator ?? 0, ind.unit)
-          const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
-
-          await tx.monthlyData.update({
-            where: { id: update.id },
-            data: {
-              numerator: update.numerator,
-              denominator: update.denominator,
-              result,
-              isPass
-            }
-          })
-        }
-      }
+    const dataIds = parsedUpdates.map(u => u.id)
+    const existingData = await prisma.monthlyData.findMany({
+      where: { id: { in: dataIds } },
+      include: { indicator: true }
     })
+
+    const transactionPromises = parsedUpdates.map(update => {
+      const data = existingData.find(d => d.id === update.id)
+      if (!data) return null
+
+      const ind = data.indicator
+      const result = calculateResult(update.numerator ?? 0, update.denominator ?? 0, ind.unit)
+      const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
+
+      return prisma.monthlyData.update({
+        where: { id: update.id },
+        data: {
+          numerator: update.numerator,
+          denominator: update.denominator,
+          result,
+          isPass
+        }
+      })
+    }).filter(Boolean) as any[]
+
+    await prisma.$transaction(transactionPromises)
 
     revalidatePath('/', 'layout')
     return { success: true }
@@ -169,15 +171,15 @@ export async function updateIndicator(id: string, name: string, targetValue: num
   try {
     const parsed = z.object({ id: z.string().uuid(), name: z.string().min(1), targetValue: z.number(), targetType: z.string(), unit: z.string() }).parse({ id, name, targetValue, targetType, unit })
     await prisma.indicator.update({ where: { id: parsed.id }, data: { name: parsed.name, targetValue: parsed.targetValue, targetType: parsed.targetType, unit: parsed.unit } })
-    await prisma.$transaction(async (tx) => {
-      const monthlyData = await tx.monthlyData.findMany({ where: { indicatorId: parsed.id }, include: { indicator: true } })
-      for (const data of monthlyData) {
-        if (data.result !== null) {
-          const isPass = checkIsPass(data.result, parsed.targetType, parsed.targetValue)
-          await tx.monthlyData.update({ where: { id: data.id }, data: { isPass } })
-        }
-      }
-    })
+    const monthlyData = await prisma.monthlyData.findMany({ where: { indicatorId: parsed.id } })
+    const promises = monthlyData
+      .filter(data => data.result !== null)
+      .map(data => {
+        const isPass = checkIsPass(data.result, parsed.targetType, parsed.targetValue)
+        return prisma.monthlyData.update({ where: { id: data.id }, data: { isPass } })
+      })
+    
+    await prisma.$transaction(promises)
 
     revalidatePath('/', 'layout')
     return { success: true }
