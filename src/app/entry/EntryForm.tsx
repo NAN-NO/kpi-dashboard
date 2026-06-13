@@ -190,7 +190,7 @@ export function EntryForm({ departments }: { departments: any }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center gap-4 justify-between sticky top-0 z-50">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center gap-4 justify-between sticky top-[64px] z-40">
         <div className="flex items-center gap-4 w-full sm:w-auto">
           <div className="flex flex-col gap-1 w-full sm:w-auto">
             <Label className="text-xs text-slate-500 dark:text-slate-300">เลือกแผนก / PCT</Label>
