@@ -88,7 +88,7 @@ export async function updateIndicatorData(updates: { id: string, numerator: numb
   } catch (error) {
     console.error("updateIndicatorData error:", error)
     if (error instanceof z.ZodError) {
-      return { error: `ข้อมูลไม่ถูกต้อง: ${error.errors[0].message}` }
+      return { error: `ข้อมูลไม่ถูกต้อง: ${(error as any).errors[0].message}` }
     }
     return { error: error instanceof Error ? error.message : String(error) }
   }
