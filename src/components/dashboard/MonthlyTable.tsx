@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KPI, calcRate, checkPassTarget } from '@/utils/kpiLogic';
+import { Edit2, Save, X } from 'lucide-react';
 
 interface Props {
   kpi: KPI;
   session: any;
-  updateMonthlyData: (kpiId: number, monthIdx: number, type: 'actual' | 'target', value: number | null) => void;
+  onBatchSave: (localData: any[]) => void;
 }
 
-export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
+export function MonthlyTable({ kpi, session, onBatchSave }: Props) {
   const [collapsed, setCollapsed] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [localData, setLocalData] = useState([...kpi.monthlyData]);
+
+  // Sync localData when kpi data changes from outside (e.g. after save)
+  useEffect(() => {
+    if (!isEditing) {
+      setLocalData([...kpi.monthlyData]);
+    }
+  }, [kpi.monthlyData, isEditing]);
 
   let sumNum = 0, sumDen = 0, latestActual: number | null = null, latestTarget: number | null = null;
   
-  kpi.monthlyData.forEach(md => {
+  localData.forEach(md => {
     if (md.target !== null && md.target !== '') {
       sumDen += parseFloat(md.target as string);
       latestTarget = parseFloat(md.target as string);
@@ -24,12 +34,29 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
   });
   
   const handleInput = (mIdx: number, type: 'actual' | 'target', valStr: string) => {
-    if (!session) {
-      alert('ต้องเข้าสู่ระบบเพื่อแก้ไขข้อมูล');
-      return;
+    const newData = [...localData];
+    newData[mIdx] = { ...newData[mIdx], [type]: valStr === '' ? null : valStr };
+    setLocalData(newData);
+  };
+
+  const handleToggleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation(); // prevent collapsing the table
+    if (!session) return;
+    
+    if (isEditing) {
+      // Save changes
+      onBatchSave(localData);
+      setIsEditing(false);
+    } else {
+      // Start editing
+      setIsEditing(true);
     }
-    const val = valStr === '' ? null : parseFloat(valStr);
-    updateMonthlyData(kpi.id, mIdx, type, val);
+  };
+
+  const handleCancelEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLocalData([...kpi.monthlyData]);
+    setIsEditing(false);
   };
 
   const actualLabel = kpi.isHDC ? 'ผล (สะสม)' : 'ผล';
@@ -50,8 +77,32 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
         </h3>
         <div className="flex items-center gap-1.5">
           <span className="text-white/60 text-[10px]">คลิกเพื่อย่อ/ขยาย</span>
+          
+          {session && (
+            <div className="flex items-center gap-1 ml-2 mr-1">
+              {isEditing && (
+                <button 
+                  onClick={handleCancelEdit}
+                  className="p-1 text-white hover:bg-rose-500 hover:text-white rounded transition-colors"
+                  title="ยกเลิก"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button 
+                onClick={handleToggleEdit}
+                className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold transition-colors ${
+                  isEditing ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-sm' : 'bg-white/20 hover:bg-white/30 text-white'
+                }`}
+              >
+                {isEditing ? <Save className="w-3 h-3" /> : <Edit2 className="w-3 h-3" />}
+                {isEditing ? 'บันทึก' : 'แก้ไข'}
+              </button>
+            </div>
+          )}
+
           <svg 
-            className="w-3.5 h-3.5 text-white/80 transition-transform duration-200"
+            className="w-3.5 h-3.5 text-white/80 transition-transform duration-200 ml-1"
             style={{ transform: collapsed ? 'rotate(180deg)' : 'rotate(0deg)' }}
             fill="none" stroke="currentColor" viewBox="0 0 24 24"
           >
@@ -78,19 +129,24 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                   <span className="inline-block text-[10px] font-extrabold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded px-1 mr-1 leading-tight align-middle">{targetLabel}</span>
                   <span className="font-medium text-slate-700 dark:text-slate-300">{kpi.denominatorLabel}{kpi.isHDC && <span className="text-amber-600 dark:text-amber-400 font-bold ml-1 text-[9px]">(จำนวนทั้งหมด)</span>}</span>
                 </td>
-                {kpi.monthlyData.map((md, i) => {
+                {localData.map((md, i) => {
                   return (
                     <td key={i} className="px-0.5 py-0.5 text-center">
-                      <input 
-                        type="number" 
-                        placeholder="-"
-                        value={md.target ?? ''}
-                        onChange={(e) => handleInput(i, 'target', e.target.value)}
-                        onFocus={e => e.target.select()}
-                        disabled={!session}
-                        style={!session ? { cursor: 'not-allowed' } : {}}
-                        className={`w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 ${!session ? 'bg-slate-100 dark:bg-slate-800' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
-                      />
+                      {isEditing ? (
+                        <input 
+                          type="number" 
+                          placeholder="-"
+                          value={md.target ?? ''}
+                          onChange={(e) => handleInput(i, 'target', e.target.value)}
+                          onFocus={e => e.target.select()}
+                          onClick={e => e.stopPropagation()}
+                          className="w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                        />
+                      ) : (
+                        <div className="w-12 min-h-[32px] md:min-h-[36px] flex items-center justify-center border border-transparent p-0.5 text-xs text-slate-900 dark:text-slate-100 font-medium">
+                          {md.target ?? '-'}
+                        </div>
+                      )}
                     </td>
                   );
                 })}
@@ -113,19 +169,24 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                   <span className="inline-block text-[10px] font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded px-1 mr-1 leading-tight align-middle">{actualLabel}</span>
                   <span className="font-medium text-slate-700 dark:text-slate-300">{kpi.numeratorLabel}</span>
                 </td>
-                {kpi.monthlyData.map((md, i) => {
+                {localData.map((md, i) => {
                   return (
                     <td key={i} className="px-0.5 py-0.5 text-center">
-                      <input 
-                        type="number" 
-                        placeholder="-"
-                        value={md.actual ?? ''}
-                        onChange={(e) => handleInput(i, 'actual', e.target.value)}
-                        onFocus={e => e.target.select()}
-                        disabled={!session}
-                        style={!session ? { cursor: 'not-allowed' } : {}}
-                        className={`w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 ${!session ? 'bg-slate-100 dark:bg-slate-800' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
-                      />
+                      {isEditing ? (
+                        <input 
+                          type="number" 
+                          placeholder="-"
+                          value={md.actual ?? ''}
+                          onChange={(e) => handleInput(i, 'actual', e.target.value)}
+                          onFocus={e => e.target.select()}
+                          onClick={e => e.stopPropagation()}
+                          className="w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                        />
+                      ) : (
+                        <div className="w-12 min-h-[32px] md:min-h-[36px] flex items-center justify-center border border-transparent p-0.5 text-xs text-slate-900 dark:text-slate-100 font-medium">
+                          {md.actual ?? '-'}
+                        </div>
+                      )}
                     </td>
                   );
                 })}
@@ -141,7 +202,7 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                 <td className="px-2.5 py-1.5 font-bold text-slate-600 dark:text-slate-400">
                   ผลลัพธ์{kpi.isHDC && <span className="text-[9px] font-normal text-amber-600 dark:text-amber-400"> (ณ เดือนนั้น)</span>}
                 </td>
-                {kpi.monthlyData.map((md, i) => {
+                {localData.map((md, i) => {
                   const num = md.actual !== null && md.actual !== '' ? parseFloat(md.actual) : null;
                   const den = md.target !== null && md.target !== '' ? parseFloat(md.target) : null;
                   let rateStr = '-';

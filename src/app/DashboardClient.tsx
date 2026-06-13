@@ -9,7 +9,7 @@ import { ChartsRow } from '@/components/dashboard/ChartsRow';
 import { MonthlyTable } from '@/components/dashboard/MonthlyTable';
 import { QuarterlySummary } from '@/components/dashboard/QuarterlySummary';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { updateSingleMonthlyData } from './actions';
+import { updateIndicatorData } from './actions';
 import { updateQuarterlySummary } from './actions/quarterly';
 import { evaluateKpiSummaryStatus } from '@/utils/kpiLogic';
 import { toast } from 'react-hot-toast';
@@ -73,8 +73,13 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
     return list;
   }, [initialData]);
 
-  // Client side state for the data, so it updates immediately when user types
+  // Client side state for the data
   const [data, setData] = useState(appData);
+
+  // Sync state if server data changes (e.g. after a Server Action)
+  React.useEffect(() => {
+    setData(appData);
+  }, [appData]);
 
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedKpiIndex, setSelectedKpiIndex] = useState(0);
@@ -109,50 +114,41 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
     return { passCount, failCount, noDataCount, fails, totalCount: data.length };
   }, [data, latestMonthIdx]);
 
-  const handleUpdateMonthly = useCallback(async (kpiId: number, monthIdx: number, type: 'actual' | 'target', value: number | null) => {
-    // We need to know the md.id for the server call. We can find it synchronously.
-    const kpi = data.find(k => k.id === kpiId);
-    const md = kpi?.monthlyData[monthIdx];
-    if (!md || !md.id) return;
+  const handleBatchSaveMonthly = useCallback(async (kpiId: number, localData: any[]) => {
+    // We map localData into updates required by updateIndicatorData
+    const updates = localData.map(md => ({
+      id: md.id,
+      numerator: md.actual !== null && md.actual !== '' ? parseFloat(md.actual) : null,
+      denominator: md.target !== null && md.target !== '' ? parseFloat(md.target) : null,
+    })).filter(u => u.id); // ensure only existing rows
 
-    // Optimistic UI update using functional state to prevent race conditions
+    if (updates.length === 0) return;
+
+    // Optimistic UI update
     setData(prevData => {
       const newData = [...prevData];
       const kpiIdx = newData.findIndex(k => k.id === kpiId);
       if (kpiIdx === -1) return prevData;
 
-      const newMonthlyData = [...newData[kpiIdx].monthlyData];
-      newMonthlyData[monthIdx] = { 
-        ...newMonthlyData[monthIdx], 
-        [type]: value !== null ? String(value) : null 
+      newData[kpiIdx] = {
+        ...newData[kpiIdx],
+        monthlyData: localData
       };
-
-      newData[kpiIdx] = { ...newData[kpiIdx], monthlyData: newMonthlyData };
       return newData;
     });
 
-    // Sync to DB using the new safe single-field action
     try {
-      await updateSingleMonthlyData(md.id, type, value);
+      const result = await updateIndicatorData(updates);
+      if (result?.error) {
+        toast.error(result.error);
+        // We could revert data here, but next.js will revalidate and fetch the fresh data anyway
+      } else {
+        toast.success('บันทึกข้อมูลสำเร็จ');
+      }
     } catch (error) {
-      // Revert Optimistic UI if failed
-      setData(prevData => {
-        const newData = [...prevData];
-        const kpiIdx = newData.findIndex(k => k.id === kpiId);
-        if (kpiIdx === -1) return prevData;
-
-        const newMonthlyData = [...newData[kpiIdx].monthlyData];
-        newMonthlyData[monthIdx] = { 
-          ...newMonthlyData[monthIdx], 
-          [type]: md[type] 
-        };
-
-        newData[kpiIdx] = { ...newData[kpiIdx], monthlyData: newMonthlyData };
-        return newData;
-      });
       toast.error('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่');
     }
-  }, [data]);
+  }, []);
 
   const handleUpdateQuarterly = useCallback(async (kpiId: number, qIdx: number, text: string) => {
     // Save previous state for rollback
@@ -256,7 +252,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               <div key={currentKpi.id} className="flex flex-col gap-1.5 mt-2">
                 <KpiDetailCard kpi={currentKpi} allKpis={data} />
                 <ChartsRow kpi={currentKpi} />
-                <MonthlyTable kpi={currentKpi} session={session} updateMonthlyData={handleUpdateMonthly} />
+                <MonthlyTable kpi={currentKpi} session={session} onBatchSave={(localData) => handleBatchSaveMonthly(currentKpi.id, localData)} />
                 <QuarterlySummary kpi={currentKpi} session={session} updateQuarterlyData={handleUpdateQuarterly} />
               </div>
             </div>
