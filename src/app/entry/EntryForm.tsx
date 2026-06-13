@@ -75,12 +75,13 @@ export function EntryForm({ departments }: { departments: any }) {
   const saveEditInd = async (id: string) => {
     const toastId = toast.loading('กำลังบันทึกตัวชี้วัด...')
     try {
-      await updateIndicator(id, editIndName, Number(editIndTarget), editIndTargetType, editIndUnit)
+      const res = await updateIndicator(id, editIndName, Number(editIndTarget), editIndTargetType, editIndUnit)
+      if (res && res.error) throw new Error(res.error)
       toast.success('แก้ไขตัวชี้วัดเรียบร้อยแล้ว', { id: toastId })
       setEditingIndId(null)
       router.refresh()
     } catch (e) {
-      toast.error('เกิดข้อผิดพลาด', { id: toastId })
+      toast.error(`เกิดข้อผิดพลาด: ${e instanceof Error ? e.message : String(e)}`, { id: toastId })
     }
   }
 
@@ -88,11 +89,12 @@ export function EntryForm({ departments }: { departments: any }) {
     if (window.confirm(`⚠️ การเตือน: คุณต้องการลบตัวชี้วัด "${name}" ใช่หรือไม่?\nข้อมูลรายเดือนทั้งหมดของตัวชี้วัดนี้จะหายไป!`)) {
       const toastId = toast.loading('กำลังลบตัวชี้วัด...')
       try {
-        await deleteIndicator(id)
+        const res = await deleteIndicator(id)
+        if (res && res.error) throw new Error(res.error)
         toast.success('ลบตัวชี้วัดเรียบร้อยแล้ว', { id: toastId })
         router.refresh()
       } catch (e) {
-        toast.error('เกิดข้อผิดพลาดในการลบตัวชี้วัด', { id: toastId })
+        toast.error(`เกิดข้อผิดพลาด: ${e instanceof Error ? e.message : String(e)}`, { id: toastId })
       }
     }
   }
@@ -102,14 +104,15 @@ export function EntryForm({ departments }: { departments: any }) {
     setSavingInd(true)
     const toastId = toast.loading('กำลังเพิ่มตัวชี้วัด...')
     try {
-      await createIndicator(indName, Number(targetVal), targetType, unit, selectedDept)
+      const res = await createIndicator(indName, Number(targetVal), targetType, unit, selectedDept)
+      if (res && res.error) throw new Error(res.error)
       setIndName('')
       setTargetVal('')
       setShowAddInd(false)
       toast.success('เพิ่มตัวชี้วัดเรียบร้อยแล้ว', { id: toastId })
       router.refresh()
     } catch (e) {
-      toast.error('เกิดข้อผิดพลาดในการเพิ่มตัวชี้วัด', { id: toastId })
+      toast.error(`เกิดข้อผิดพลาด: ${e instanceof Error ? e.message : String(e)}`, { id: toastId })
     }
     setSavingInd(false)
   }

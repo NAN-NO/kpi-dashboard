@@ -26,12 +26,13 @@ export function SettingsClient({ departments }: { departments: any[] }) {
     setSavingDept(true)
     const toastId = toast.loading('กำลังเพิ่มแผนก...')
     try {
-      await createDepartment(deptName)
+      const res = await createDepartment(deptName)
+      if (res && res.error) throw new Error(res.error)
       setDeptName('')
       setShowAddDept(false)
       toast.success('เพิ่มแผนกเรียบร้อยแล้ว', { id: toastId })
     } catch (e) {
-      toast.error('เกิดข้อผิดพลาดในการเพิ่มแผนก', { id: toastId })
+      toast.error(`เกิดข้อผิดพลาด: ${e instanceof Error ? e.message : String(e)}`, { id: toastId })
     }
     setSavingDept(false)
   }
@@ -40,10 +41,11 @@ export function SettingsClient({ departments }: { departments: any[] }) {
     if (window.confirm(`⚠️ การเตือน: คุณต้องการลบแผนก "${name}" ใช่หรือไม่?\nตัวชี้วัดทั้งหมดและข้อมูลรายเดือนของแผนกนี้จะถูกลบทิ้งอย่างถาวร!`)) {
       const toastId = toast.loading('กำลังลบแผนก...')
       try {
-        await deleteDepartment(id)
+        const res = await deleteDepartment(id)
+        if (res && res.error) throw new Error(res.error)
         toast.success('ลบแผนกเรียบร้อยแล้ว', { id: toastId })
       } catch (e) {
-        toast.error('เกิดข้อผิดพลาดในการลบแผนก', { id: toastId })
+        toast.error(`เกิดข้อผิดพลาด: ${e instanceof Error ? e.message : String(e)}`, { id: toastId })
       }
     }
   }
@@ -57,10 +59,11 @@ export function SettingsClient({ departments }: { departments: any[] }) {
     if (editDeptName) {
       const toastId = toast.loading('กำลังอัปเดตแผนก...')
       try {
-        await updateDepartment(id, editDeptName)
+        const res = await updateDepartment(id, editDeptName)
+        if (res && res.error) throw new Error(res.error)
         toast.success('อัปเดตแผนกเรียบร้อยแล้ว', { id: toastId })
       } catch (e) {
-        toast.error('เกิดข้อผิดพลาดในการอัปเดตแผนก', { id: toastId })
+        toast.error(`เกิดข้อผิดพลาด: ${e instanceof Error ? e.message : String(e)}`, { id: toastId })
       }
     }
     setEditingDeptId(null)

@@ -95,75 +95,104 @@ export async function updateIndicatorData(updates: { id: string, numerator: numb
 }
 
 export async function createDepartment(name: string) {
-  const parsed = createDepartmentSchema.parse({ name })
-  await prisma.department.create({
-    data: { name: parsed.name }
-  })
-  revalidatePath('/', 'layout')
+  try {
+    const parsed = createDepartmentSchema.parse({ name })
+    await prisma.department.create({
+      data: { name: parsed.name }
+    })
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) }
+  }
 }
 
 export async function createIndicator(name: string, targetValue: number, targetType: string, unit: string, departmentId: string, year: number = 2569) {
-  const parsed = createIndicatorSchema.parse({ name, targetValue, targetType, unit, departmentId, year })
-  
-  const ind = await prisma.indicator.create({
-    data: {
-      name: parsed.name,
-      targetValue: parsed.targetValue,
-      targetType: parsed.targetType,
-      unit: parsed.unit,
-      departmentId: parsed.departmentId
-    }
-  })
-
-  // Create empty monthly data for the new indicator (months 1-12)
-  const dataToCreate = []
-  for (let month = 1; month <= 12; month++) {
-    dataToCreate.push({
-      indicatorId: ind.id,
-      year: parsed.year,
-      month,
-      numerator: null,
-      denominator: null, // Start with null for empty
+  try {
+    const parsed = createIndicatorSchema.parse({ name, targetValue, targetType, unit, departmentId, year })
+    
+    const ind = await prisma.indicator.create({
+      data: {
+        name: parsed.name,
+        targetValue: parsed.targetValue,
+        targetType: parsed.targetType,
+        unit: parsed.unit,
+        departmentId: parsed.departmentId
+      }
     })
+
+    const dataToCreate = []
+    for (let month = 1; month <= 12; month++) {
+      dataToCreate.push({
+        indicatorId: ind.id,
+        year: parsed.year,
+        month,
+        numerator: null,
+        denominator: null,
+      })
+    }
+
+    await prisma.monthlyData.createMany({
+      data: dataToCreate
+    })
+
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) }
   }
-
-  await prisma.monthlyData.createMany({
-    data: dataToCreate
-  })
-
-  revalidatePath('/', 'layout')
 }
 
 export async function updateDepartment(id: string, name: string) {
-  const parsed = z.object({ id: z.string().uuid(), name: z.string().min(1) }).parse({ id, name })
-  await prisma.department.update({ where: { id: parsed.id }, data: { name: parsed.name } })
-  revalidatePath('/', 'layout')
+  try {
+    const parsed = z.object({ id: z.string().uuid(), name: z.string().min(1) }).parse({ id, name })
+    await prisma.department.update({ where: { id: parsed.id }, data: { name: parsed.name } })
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) }
+  }
 }
 
 export async function deleteDepartment(id: string) {
-  const parsed = z.object({ id: z.string().uuid() }).parse({ id })
-  await prisma.department.delete({ where: { id: parsed.id } })
-  revalidatePath('/', 'layout')
+  try {
+    const parsed = z.object({ id: z.string().uuid() }).parse({ id })
+    await prisma.department.delete({ where: { id: parsed.id } })
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) }
+  }
 }
 
 export async function updateIndicator(id: string, name: string, targetValue: number, targetType: string, unit: string) {
-  const parsed = z.object({ id: z.string().uuid(), name: z.string().min(1), targetValue: z.number(), targetType: z.string(), unit: z.string() }).parse({ id, name, targetValue, targetType, unit })
-  await prisma.indicator.update({ where: { id: parsed.id }, data: { name: parsed.name, targetValue: parsed.targetValue, targetType: parsed.targetType, unit: parsed.unit } })
-  await prisma.$transaction(async (tx) => {
-    const monthlyData = await tx.monthlyData.findMany({ where: { indicatorId: parsed.id }, include: { indicator: true } })
-    for (const data of monthlyData) {
-      if (data.result !== null) {
-        const isPass = checkIsPass(data.result, parsed.targetType, parsed.targetValue)
-        await tx.monthlyData.update({ where: { id: data.id }, data: { isPass } })
+  try {
+    const parsed = z.object({ id: z.string().uuid(), name: z.string().min(1), targetValue: z.number(), targetType: z.string(), unit: z.string() }).parse({ id, name, targetValue, targetType, unit })
+    await prisma.indicator.update({ where: { id: parsed.id }, data: { name: parsed.name, targetValue: parsed.targetValue, targetType: parsed.targetType, unit: parsed.unit } })
+    await prisma.$transaction(async (tx) => {
+      const monthlyData = await tx.monthlyData.findMany({ where: { indicatorId: parsed.id }, include: { indicator: true } })
+      for (const data of monthlyData) {
+        if (data.result !== null) {
+          const isPass = checkIsPass(data.result, parsed.targetType, parsed.targetValue)
+          await tx.monthlyData.update({ where: { id: data.id }, data: { isPass } })
+        }
       }
-    }
-  })
+    })
 
-  revalidatePath('/', 'layout')
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) }
+  }
 }
 
 export async function deleteIndicator(id: string) {
-  const parsed = z.object({ id: z.string().uuid() }).parse({ id })
-  await prisma.indicator.delete({ where: { id: parsed.id } })
-  revalidatePath('/', 'layout')
+  try {
+    const parsed = z.object({ id: z.string().uuid() }).parse({ id })
+    await prisma.indicator.delete({ where: { id: parsed.id } })
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) }
+  }
 }
