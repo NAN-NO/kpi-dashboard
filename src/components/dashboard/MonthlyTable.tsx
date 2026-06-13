@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { KPI, calcRate, checkPassTarget } from '@/utils/kpiLogic';
-import { Edit2, Save, X } from 'lucide-react';
+import { Edit2, Save, X, Loader2 } from 'lucide-react';
 
 interface Props {
   kpi: KPI;
   session: any;
   onBatchSave: (localData: any[]) => void;
+  isSaving?: boolean;
 }
 
-export function MonthlyTable({ kpi, session, onBatchSave }: Props) {
+export function MonthlyTable({ kpi, session, onBatchSave, isSaving }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [localData, setLocalData] = useState([...kpi.monthlyData]);
@@ -41,12 +42,12 @@ export function MonthlyTable({ kpi, session, onBatchSave }: Props) {
 
   const handleToggleEdit = (e: React.MouseEvent) => {
     e.stopPropagation(); // prevent collapsing the table
-    if (!session) return;
+    if (!session || isSaving) return;
     
     if (isEditing) {
       // Save changes
       onBatchSave(localData);
-      setIsEditing(false);
+      // Don't set isEditing false yet, let it stay editing while loading
     } else {
       // Start editing
       setIsEditing(true);
@@ -55,9 +56,17 @@ export function MonthlyTable({ kpi, session, onBatchSave }: Props) {
 
   const handleCancelEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isSaving) return;
     setLocalData([...kpi.monthlyData]);
     setIsEditing(false);
   };
+
+  // Turn off editing mode automatically when save finishes
+  useEffect(() => {
+    if (isEditing && !isSaving && localData.every((md, i) => md.actual === kpi.monthlyData[i].actual && md.target === kpi.monthlyData[i].target)) {
+      setIsEditing(false);
+    }
+  }, [isSaving, kpi.monthlyData]);
 
   const actualLabel = kpi.isHDC ? 'ผล (สะสม)' : 'ผล';
   const targetLabel = kpi.isHDC ? 'เป้า (ผู้รับผิดชอบ)' : 'เป้า';
@@ -83,7 +92,8 @@ export function MonthlyTable({ kpi, session, onBatchSave }: Props) {
               {isEditing && (
                 <button 
                   onClick={handleCancelEdit}
-                  className="p-1 text-white hover:bg-rose-500 hover:text-white rounded transition-colors"
+                  disabled={isSaving}
+                  className={`p-1 rounded transition-colors ${isSaving ? 'text-white/50 cursor-not-allowed' : 'text-white hover:bg-rose-500 hover:text-white'}`}
                   title="ยกเลิก"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -91,12 +101,19 @@ export function MonthlyTable({ kpi, session, onBatchSave }: Props) {
               )}
               <button 
                 onClick={handleToggleEdit}
+                disabled={isSaving}
                 className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold transition-colors ${
-                  isEditing ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-sm' : 'bg-white/20 hover:bg-white/30 text-white'
+                  isEditing 
+                    ? isSaving 
+                      ? 'bg-slate-500 cursor-not-allowed text-white shadow-sm' 
+                      : 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-sm' 
+                    : 'bg-white/20 hover:bg-white/30 text-white'
                 }`}
               >
-                {isEditing ? <Save className="w-3 h-3" /> : <Edit2 className="w-3 h-3" />}
-                {isEditing ? 'บันทึก' : 'แก้ไข'}
+                {isEditing ? (
+                  isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />
+                ) : <Edit2 className="w-3 h-3" />}
+                {isEditing ? (isSaving ? 'กำลังบันทึก...' : 'บันทึก') : 'แก้ไข'}
               </button>
             </div>
           )}
@@ -140,7 +157,8 @@ export function MonthlyTable({ kpi, session, onBatchSave }: Props) {
                           onChange={(e) => handleInput(i, 'target', e.target.value)}
                           onFocus={e => e.target.select()}
                           onClick={e => e.stopPropagation()}
-                          className="w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                          disabled={isSaving}
+                          className="w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                       ) : (
                         <div className="w-12 min-h-[32px] md:min-h-[36px] flex items-center justify-center border border-transparent p-0.5 text-xs text-slate-900 dark:text-slate-100 font-medium">
@@ -180,7 +198,8 @@ export function MonthlyTable({ kpi, session, onBatchSave }: Props) {
                           onChange={(e) => handleInput(i, 'actual', e.target.value)}
                           onFocus={e => e.target.select()}
                           onClick={e => e.stopPropagation()}
-                          className="w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+                          disabled={isSaving}
+                          className="w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                       ) : (
                         <div className="w-12 min-h-[32px] md:min-h-[36px] flex items-center justify-center border border-transparent p-0.5 text-xs text-slate-900 dark:text-slate-100 font-medium">

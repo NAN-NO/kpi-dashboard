@@ -75,6 +75,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
 
   // Client side state for the data
   const [data, setData] = useState(appData);
+  const [savingKpiId, setSavingKpiId] = useState<string | null>(null);
 
   // Sync state if server data changes (e.g. after a Server Action)
   React.useEffect(() => {
@@ -137,6 +138,8 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
       return newData;
     });
 
+    setSavingKpiId(kpiId.toString());
+
     try {
       const result = await updateIndicatorData(updates);
       if (result?.error) {
@@ -147,6 +150,8 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
       }
     } catch (error) {
       toast.error('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่');
+    } finally {
+      setSavingKpiId(null);
     }
   }, []);
 
@@ -252,7 +257,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               <div key={currentKpi.id} className="flex flex-col gap-1.5 mt-2">
                 <KpiDetailCard kpi={currentKpi} allKpis={data} />
                 <ChartsRow kpi={currentKpi} />
-                <MonthlyTable kpi={currentKpi} session={session} onBatchSave={(localData) => handleBatchSaveMonthly(currentKpi.id, localData)} />
+                <MonthlyTable kpi={currentKpi} session={session} isSaving={savingKpiId === currentKpi.id} onBatchSave={(localData) => handleBatchSaveMonthly(currentKpi.id, localData)} />
                 <QuarterlySummary kpi={currentKpi} session={session} updateQuarterlyData={handleUpdateQuarterly} />
               </div>
             </div>
