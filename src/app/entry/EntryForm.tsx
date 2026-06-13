@@ -181,7 +181,8 @@ export function EntryForm({ departments }: { departments: any }) {
       toast.success(`บันทึกข้อมูลเรียบร้อยแล้ว (${updates.length} รายการ)`, { id: toastId, duration: 4000 })
       router.refresh()
     } catch (e) {
-      toast.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล", { id: toastId })
+      const errMsg = e instanceof Error ? e.message : String(e)
+      toast.error(`เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${errMsg}`, { id: toastId })
     }
     setSaving(false)
   }
