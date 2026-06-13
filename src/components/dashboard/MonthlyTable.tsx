@@ -23,15 +23,6 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
     }
   });
   
-  const handleInput = (mIdx: number, type: 'actual' | 'target', valStr: string) => {
-    if (!session) {
-      alert('ต้องเข้าสู่ระบบเพื่อแก้ไขข้อมูล');
-      return;
-    }
-    const val = valStr === '' ? null : parseFloat(valStr);
-    updateMonthlyData(kpi.id, mIdx, type, val);
-  };
-
   const actualLabel = kpi.isHDC ? 'ผล (สะสม)' : 'ผล';
   const targetLabel = kpi.isHDC ? 'เป้า (ผู้รับผิดชอบ)' : 'เป้า';
 
@@ -81,16 +72,9 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                 {kpi.monthlyData.map((md, i) => {
                   return (
                     <td key={i} className="px-0.5 py-0.5 text-center">
-                      <input 
-                        type="number" 
-                        placeholder="-"
-                        value={md.target ?? ''}
-                        onChange={(e) => handleInput(i, 'target', e.target.value)}
-                        onFocus={e => e.target.select()}
-                        disabled={!session}
-                        style={!session ? { cursor: 'not-allowed' } : {}}
-                        className={`w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 ${!session ? 'bg-slate-100 dark:bg-slate-800' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
-                      />
+                      <div className="w-12 min-h-[32px] md:min-h-[36px] flex items-center justify-center border border-transparent p-0.5 text-xs text-slate-900 dark:text-slate-100 font-medium">
+                        {md.target ?? '-'}
+                      </div>
                     </td>
                   );
                 })}
@@ -116,16 +100,9 @@ export function MonthlyTable({ kpi, session, updateMonthlyData }: Props) {
                 {kpi.monthlyData.map((md, i) => {
                   return (
                     <td key={i} className="px-0.5 py-0.5 text-center">
-                      <input 
-                        type="number" 
-                        placeholder="-"
-                        value={md.actual ?? ''}
-                        onChange={(e) => handleInput(i, 'actual', e.target.value)}
-                        onFocus={e => e.target.select()}
-                        disabled={!session}
-                        style={!session ? { cursor: 'not-allowed' } : {}}
-                        className={`w-12 min-h-[32px] md:min-h-[36px] text-center border border-slate-200 dark:border-slate-700 rounded p-0.5 text-xs focus:border-blue-500 outline-none placeholder:text-slate-300 dark:placeholder:text-slate-600 ${!session ? 'bg-slate-100 dark:bg-slate-800' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100'}`}
-                      />
+                      <div className="w-12 min-h-[32px] md:min-h-[36px] flex items-center justify-center border border-transparent p-0.5 text-xs text-slate-900 dark:text-slate-100 font-medium">
+                        {md.actual ?? '-'}
+                      </div>
                     </td>
                   );
                 })}

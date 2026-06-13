@@ -109,39 +109,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
     return { passCount, failCount, noDataCount, fails, totalCount: data.length };
   }, [data, latestMonthIdx]);
 
-  const handleUpdateMonthly = useCallback(async (kpiId: number, monthIdx: number, type: 'actual' | 'target', value: number | null) => {
-    // Save previous state for rollback
-    const prevData = data.map(d => ({ ...d, monthlyData: d.monthlyData.map((md: any) => ({ ...md })) }));
 
-    // Optimistic UI update
-    const newData = [...data];
-    const kpiIdx = newData.findIndex(k => k.id === kpiId);
-    if (kpiIdx === -1) return;
-
-    newData[kpiIdx] = {
-      ...newData[kpiIdx],
-      monthlyData: newData[kpiIdx].monthlyData.map((md: any, i: number) =>
-        i === monthIdx ? { ...md, [type]: value !== null ? String(value) : null } : md
-      )
-    };
-    setData(newData);
-
-    const md = newData[kpiIdx].monthlyData[monthIdx];
-    // Sync to DB
-    if (md?.id) {
-      try {
-        await updateMonthlyData(
-          md.id,
-          type === 'actual' ? (value ?? 0) : Number(md.actual || 0),
-          type === 'target' ? value : (md.target !== null ? Number(md.target) : null)
-        );
-      } catch (error) {
-        // Rollback on failure
-        setData(prevData);
-        toast.error('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่');
-      }
-    }
-  }, [data]);
 
   const handleUpdateQuarterly = useCallback(async (kpiId: number, qIdx: number, text: string) => {
     // Save previous state for rollback
@@ -245,7 +213,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               <div key={currentKpi.id} className="flex flex-col gap-1.5 mt-2">
                 <KpiDetailCard kpi={currentKpi} allKpis={data} />
                 <ChartsRow kpi={currentKpi} />
-                <MonthlyTable kpi={currentKpi} session={session} updateMonthlyData={handleUpdateMonthly} />
+                <MonthlyTable kpi={currentKpi} session={session} updateMonthlyData={() => {}} />
                 <QuarterlySummary kpi={currentKpi} session={session} updateQuarterlyData={handleUpdateQuarterly} />
               </div>
             </div>
