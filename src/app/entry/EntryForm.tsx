@@ -177,7 +177,10 @@ export function EntryForm({ departments }: { departments: any }) {
         return
       }
 
-      await updateIndicatorData(updates)
+      const res = await updateIndicatorData(updates)
+      if (res && res.error) {
+        throw new Error(res.error)
+      }
       toast.success(`บันทึกข้อมูลเรียบร้อยแล้ว (${updates.length} รายการ)`, { id: toastId, duration: 4000 })
       router.refresh()
     } catch (e) {

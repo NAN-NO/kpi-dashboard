@@ -55,34 +55,43 @@ export async function updateMonthlyData(dataId: string, numerator: number | null
 }
 
 export async function updateIndicatorData(updates: { id: string, numerator: number | null, denominator: number | null }[]) {
-  const parsedUpdates = z.array(updateDataSchema).parse(updates)
-  
-  await prisma.$transaction(async (tx) => {
-    for (const update of parsedUpdates) {
-      const monthlyData = await tx.monthlyData.findUnique({
-        where: { id: update.id },
-        include: { indicator: true }
-      })
-      
-      if (monthlyData) {
-        const ind = monthlyData.indicator
-        const result = calculateResult(update.numerator ?? 0, update.denominator ?? 0, ind.unit)
-        const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
-
-        await tx.monthlyData.update({
+  try {
+    const parsedUpdates = z.array(updateDataSchema).parse(updates)
+    
+    await prisma.$transaction(async (tx) => {
+      for (const update of parsedUpdates) {
+        const monthlyData = await tx.monthlyData.findUnique({
           where: { id: update.id },
-          data: {
-            numerator: update.numerator,
-            denominator: update.denominator,
-            result,
-            isPass
-          }
+          include: { indicator: true }
         })
-      }
-    }
-  })
+        
+        if (monthlyData) {
+          const ind = monthlyData.indicator
+          const result = calculateResult(update.numerator ?? 0, update.denominator ?? 0, ind.unit)
+          const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
 
-  revalidatePath('/', 'layout')
+          await tx.monthlyData.update({
+            where: { id: update.id },
+            data: {
+              numerator: update.numerator,
+              denominator: update.denominator,
+              result,
+              isPass
+            }
+          })
+        }
+      }
+    })
+
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (error) {
+    console.error("updateIndicatorData error:", error)
+    if (error instanceof z.ZodError) {
+      return { error: `ข้อมูลไม่ถูกต้อง: ${error.errors[0].message}` }
+    }
+    return { error: error instanceof Error ? error.message : String(error) }
+  }
 }
 
 export async function createDepartment(name: string) {
