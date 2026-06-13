@@ -84,7 +84,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
 
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedKpiIndex, setSelectedKpiIndex] = useState(0);
-  const [overviewCollapsed, setOverviewCollapsed] = useState(false);
+  const [overviewCollapsed, setOverviewCollapsed] = useState(true);
   const [detailsCollapsed, setDetailsCollapsed] = useState(false);
 
   // Auto-detect latest month (simplified logic)
@@ -176,10 +176,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
       await updateQuarterlySummary({
         indicatorId: kpi.id,
         year: kpi.year,
-        q1Text: kpi.analysis[0],
-        q2Text: kpi.analysis[1],
-        q3Text: kpi.analysis[2],
-        q4Text: kpi.analysis[3],
+        [`q${qIdx + 1}Text`]: text
       });
     } catch (error) {
       // Rollback on failure
