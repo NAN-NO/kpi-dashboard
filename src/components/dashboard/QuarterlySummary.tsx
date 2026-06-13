@@ -34,10 +34,6 @@ export function QuarterlySummary({ kpi, session, updateQuarterlyData }: Props) {
   }, [kpi.id, kpi.analysis]);
 
   const handleToggleLock = (qIdx: number) => {
-    if (!session) {
-      alert('ต้องเข้าสู่ระบบเพื่อแก้ไขข้อมูล');
-      return;
-    }
     const newLocks = [...locks];
     if (newLocks[qIdx]) {
       // Unlocking

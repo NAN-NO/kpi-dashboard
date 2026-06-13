@@ -54,6 +54,42 @@ export async function updateMonthlyData(dataId: string, numerator: number | null
   revalidatePath('/', 'layout')
 }
 
+const updateSingleSchema = z.object({
+  id: z.string().uuid(),
+  type: z.enum(['actual', 'target']),
+  value: z.number().nullable()
+})
+
+export async function updateSingleMonthlyData(dataId: string, type: 'actual' | 'target', value: number | null) {
+  const parsed = updateSingleSchema.parse({ id: dataId, type, value })
+  
+  const monthlyData = await prisma.monthlyData.findUnique({
+    where: { id: parsed.id },
+    include: { indicator: true }
+  })
+
+  if (!monthlyData) throw new Error("Data not found")
+  
+  const ind = monthlyData.indicator
+  const num = parsed.type === 'actual' ? parsed.value : monthlyData.numerator
+  const den = parsed.type === 'target' ? parsed.value : monthlyData.denominator
+
+  const result = calculateResult(num ?? 0, den ?? 0, ind.unit)
+  const isPass = checkIsPass(result, ind.targetType, ind.targetValue)
+
+  await prisma.monthlyData.update({
+    where: { id: parsed.id },
+    data: {
+      numerator: num,
+      denominator: den,
+      result,
+      isPass
+    }
+  })
+
+  revalidatePath('/', 'layout')
+}
+
 export async function updateIndicatorData(updates: { id: string, numerator: number | null, denominator: number | null }[]) {
   try {
     const parsedUpdates = z.array(updateDataSchema).parse(updates)

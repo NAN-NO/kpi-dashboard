@@ -9,7 +9,7 @@ import { ChartsRow } from '@/components/dashboard/ChartsRow';
 import { MonthlyTable } from '@/components/dashboard/MonthlyTable';
 import { QuarterlySummary } from '@/components/dashboard/QuarterlySummary';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { updateMonthlyData } from './actions';
+import { updateSingleMonthlyData } from './actions';
 import { updateQuarterlySummary } from './actions/quarterly';
 import { evaluateKpiSummaryStatus } from '@/utils/kpiLogic';
 import { toast } from 'react-hot-toast';
@@ -109,7 +109,50 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
     return { passCount, failCount, noDataCount, fails, totalCount: data.length };
   }, [data, latestMonthIdx]);
 
+  const handleUpdateMonthly = useCallback(async (kpiId: number, monthIdx: number, type: 'actual' | 'target', value: number | null) => {
+    // We need to know the md.id for the server call. We can find it synchronously.
+    const kpi = data.find(k => k.id === kpiId);
+    const md = kpi?.monthlyData[monthIdx];
+    if (!md || !md.id) return;
 
+    // Optimistic UI update using functional state to prevent race conditions
+    setData(prevData => {
+      const newData = [...prevData];
+      const kpiIdx = newData.findIndex(k => k.id === kpiId);
+      if (kpiIdx === -1) return prevData;
+
+      const newMonthlyData = [...newData[kpiIdx].monthlyData];
+      newMonthlyData[monthIdx] = { 
+        ...newMonthlyData[monthIdx], 
+        [type]: value !== null ? String(value) : null 
+      };
+
+      newData[kpiIdx] = { ...newData[kpiIdx], monthlyData: newMonthlyData };
+      return newData;
+    });
+
+    // Sync to DB using the new safe single-field action
+    try {
+      await updateSingleMonthlyData(md.id, type, value);
+    } catch (error) {
+      // Revert Optimistic UI if failed
+      setData(prevData => {
+        const newData = [...prevData];
+        const kpiIdx = newData.findIndex(k => k.id === kpiId);
+        if (kpiIdx === -1) return prevData;
+
+        const newMonthlyData = [...newData[kpiIdx].monthlyData];
+        newMonthlyData[monthIdx] = { 
+          ...newMonthlyData[monthIdx], 
+          [type]: md[type] 
+        };
+
+        newData[kpiIdx] = { ...newData[kpiIdx], monthlyData: newMonthlyData };
+        return newData;
+      });
+      toast.error('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่');
+    }
+  }, [data]);
 
   const handleUpdateQuarterly = useCallback(async (kpiId: number, qIdx: number, text: string) => {
     // Save previous state for rollback
@@ -213,7 +256,7 @@ export function DashboardClient({ initialData }: { initialData: any[] }) {
               <div key={currentKpi.id} className="flex flex-col gap-1.5 mt-2">
                 <KpiDetailCard kpi={currentKpi} allKpis={data} />
                 <ChartsRow kpi={currentKpi} />
-                <MonthlyTable kpi={currentKpi} session={session} updateMonthlyData={() => {}} />
+                <MonthlyTable kpi={currentKpi} session={session} updateMonthlyData={handleUpdateMonthly} />
                 <QuarterlySummary kpi={currentKpi} session={session} updateQuarterlyData={handleUpdateQuarterly} />
               </div>
             </div>
